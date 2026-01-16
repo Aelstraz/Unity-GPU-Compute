@@ -9,6 +9,8 @@ GPU Compute provides an easy way to setup & execute GPU compute shaders in Unity
 - Track compute execution time
 - Centralized in a single class
 
+![alt text](https://github.com/Aelstraz/Unity-GPU-Compute/blob/main/Screenshot.png?raw=true)
+
 ### Importing/Installing:
 Simply add the entire folder into your projects Assets folder.
 ***
