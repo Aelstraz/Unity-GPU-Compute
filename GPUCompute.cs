@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Collections;
@@ -401,7 +401,7 @@ namespace GPUComputeModule
         /// <param name="data">The data to set the buffer to</param>
         public void SetBufferData<T>(string name, ref NativeArray<T> data) where T : struct
         {
-            BufferInfo bufferData = GetBufferFromList(name, ref buffers);
+            BufferInfo bufferData = GetBufferInfo(name);
             if (CheckIfBufferInfoIsValid<T>(name, data.Length, bufferData))
             {
                 bufferData.buffer.SetData(data);
@@ -416,7 +416,7 @@ namespace GPUComputeModule
         /// <param name="data">The data to set the buffer to</param>
         public void SetBufferData<T>(string name, ref List<T> data) where T : struct
         {
-            BufferInfo bufferData = GetBufferFromList(name, ref buffers);
+            BufferInfo bufferData = GetBufferInfo(name);
             if (CheckIfBufferInfoIsValid<T>(name, data.Count, bufferData))
             {
                 bufferData.buffer.SetData(data);
@@ -431,7 +431,7 @@ namespace GPUComputeModule
         /// <param name="data">The data to set the buffer to</param>
         public void SetBufferData<T>(string name, ref T[] data) where T : struct
         {
-            BufferInfo bufferData = GetBufferFromList(name, ref buffers);
+            BufferInfo bufferData = GetBufferInfo(name);
             if (CheckIfBufferInfoIsValid<T>(name, data.Length, bufferData))
             {
                 bufferData.buffer.SetData(data);
@@ -446,7 +446,7 @@ namespace GPUComputeModule
         /// <param name="data">The data to set the buffer to</param>
         public static void SetGlobalBufferData<T>(string name, ref NativeArray<T> data) where T : struct
         {
-            BufferInfo bufferInfo = GetBufferFromList(name, ref globalBuffers);
+            BufferInfo bufferInfo = GetGlobalBufferInfo(name);
             if (CheckIfBufferInfoIsValid<T>(name, data.Length, bufferInfo))
             {
                 bufferInfo.buffer.SetData(data);
@@ -461,7 +461,7 @@ namespace GPUComputeModule
         /// <param name="data">The data to set the buffer to</param>
         public static void SetGlobalBufferData<T>(string name, ref List<T> data) where T : struct
         {
-            BufferInfo bufferInfo = GetBufferFromList(name, ref globalBuffers);
+            BufferInfo bufferInfo = GetGlobalBufferInfo(name);
             if (CheckIfBufferInfoIsValid<T>(name, data.Count, bufferInfo))
             {
                 bufferInfo.buffer.SetData(data);
@@ -476,7 +476,7 @@ namespace GPUComputeModule
         /// <param name="data">The data to set the buffer to</param>
         public static void SetGlobalBufferData<T>(string name, ref T[] data) where T : struct
         {
-            BufferInfo bufferInfo = GetBufferFromList(name, ref globalBuffers);
+            BufferInfo bufferInfo = GetGlobalBufferInfo(name);
             if (CheckIfBufferInfoIsValid<T>(name, data.Length, bufferInfo))
             {
                 bufferInfo.buffer.SetData(data);
@@ -729,7 +729,7 @@ namespace GPUComputeModule
         /// <param name="output">The target to output the buffer data to</param>
         public void GetBufferData<T>(string name, ref T[] output) where T : struct
         {
-            BufferInfo bufferData = GetBufferFromList(name, ref buffers);
+            BufferInfo bufferData = GetBufferInfo(name);
             if (string.IsNullOrEmpty(bufferData.name))
             {
                 Debug.LogError("Unable to get buffer data " + name + ", buffer not found");
@@ -752,7 +752,7 @@ namespace GPUComputeModule
         /// <param name="output">The target to output the buffer data to</param>
         public void GetBufferData<T>(string name, ref List<T> output) where T : struct
         {
-            BufferInfo bufferData = GetBufferFromList(name, ref buffers);
+            BufferInfo bufferData = GetBufferInfo(name);
             if (string.IsNullOrEmpty(bufferData.name))
             {
                 Debug.LogError("Unable to get buffer data " + name + ", buffer not found");
@@ -780,7 +780,7 @@ namespace GPUComputeModule
         /// <param name="output">The target to output the buffer data to</param>
         public void GetBufferData<T>(string name, ref NativeArray<T> output) where T : struct
         {
-            BufferInfo bufferData = GetBufferFromList(name, ref buffers);
+            BufferInfo bufferData = GetBufferInfo(name);
             if (string.IsNullOrEmpty(bufferData.name))
             {
                 Debug.LogError("Unable to get buffer data " + name + ", buffer not found");
@@ -808,7 +808,7 @@ namespace GPUComputeModule
         /// <param name="output">The target to output the buffer data to</param>
         public static void GetGlobalBufferData<T>(string name, ref T[] output) where T : struct
         {
-            BufferInfo bufferData = GetBufferFromList(name, ref globalBuffers);
+            BufferInfo bufferData = GetGlobalBufferInfo(name);
             if (string.IsNullOrEmpty(bufferData.name))
             {
                 Debug.LogError("Unable to get global buffer data " + name + ", global buffer not found");
@@ -831,7 +831,7 @@ namespace GPUComputeModule
         /// <param name="output">The target to output the buffer data to</param>
         public static void GetGlobalBufferData<T>(string name, ref List<T> output) where T : struct
         {
-            BufferInfo bufferData = GetBufferFromList(name, ref globalBuffers);
+            BufferInfo bufferData = GetGlobalBufferInfo(name);
             if (string.IsNullOrEmpty(bufferData.name))
             {
                 Debug.LogError("Unable to get global buffer data " + name + ", global buffer not found");
@@ -859,7 +859,7 @@ namespace GPUComputeModule
         /// <param name="output">The target to output the buffer data to</param>
         public static void GetGlobalBufferData<T>(string name, ref NativeArray<T> output) where T : struct
         {
-            BufferInfo bufferData = GetBufferFromList(name, ref globalBuffers);
+            BufferInfo bufferData = GetGlobalBufferInfo(name);
             if (string.IsNullOrEmpty(bufferData.name))
             {
                 Debug.LogError("Unable to get global buffer data " + name + ", global buffer not found");
@@ -913,10 +913,34 @@ namespace GPUComputeModule
             return contains;
         }
 
-        private static BufferInfo GetBufferFromList(string name, ref List<BufferInfo> bufferDataList)
+        /// <summary>
+        /// Finds and returns the BufferInfo that has the same input name
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns>The BufferInfo that matches the input name, or a BufferInfo containing null values</returns>
+        public BufferInfo GetBufferInfo(string name)
         {
             BufferInfo bufferData = new BufferInfo(null, null, null);
-            foreach (BufferInfo buffer in bufferDataList)
+            foreach (BufferInfo buffer in buffers)
+            {
+                if (buffer.name == name)
+                {
+                    bufferData = buffer;
+                    break;
+                }
+            }
+            return bufferData;
+        }
+
+        // <summary>
+        /// Finds and returns the global BufferInfo that has the same input name
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns>The global BufferInfo that matches the input name, or a BufferInfo containing null values</returns>
+        public static BufferInfo GetGlobalBufferInfo(string name)
+        {
+            BufferInfo bufferData = new BufferInfo(null, null, null);
+            foreach (BufferInfo buffer in globalBuffers)
             {
                 if (buffer.name == name)
                 {
