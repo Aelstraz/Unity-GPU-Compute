@@ -141,6 +141,13 @@ The amount of time it took for the last computation to finish is also tracked an
  	TimeSpan lastComputeTime = gpuCompute.GetLastComputeTime();
   
 ***
+### Get BufferInfo/ComputeBuffer:
+BufferInfo containing the buffer data type, name and the associated ComputeBuffer can be retreived through the following methods (depending if the buffer is local or global):
+
+ 	BufferInfo bufferInfo = gpuCompute.GetBufferInfo(name);
+	BufferInfo globalBufferInfo = gpuCompute.GetGlobalBufferInfo(name);
+  
+***
 # Example - Creating a subdivision plane:
 This example shows how to generate a subdivided plane using GPU Compute- showcasing the relatively small amount of simple GPU related code required to run two kernels in the compute shader.
 
