@@ -32,6 +32,7 @@ GPU Compute provides the ultimate & easiest way to setup & execute GPU compute s
 9. [Global Resources](#global-resources)
 10. [Buffer Debugging](#buffer-debugging)
 11. [Advanced Features](#advanced-features)
+12. [Example Usage](#example-usage)
 
 ---
 
