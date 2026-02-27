@@ -247,8 +247,7 @@ For array-based workloads:
 
 ```csharp
 int jobLength = vertices.Length;
-int shaderThreads = 256;
-gpuCompute.SetCalculatedThreadGroupSize(jobLength, kernelIndex: 0);
+int threadLength = gpuCompute.SetCalculatedThreadGroupSize(jobLength, kernelIndex: 0);
 ```
 
 ### Automatic 2D Thread Group Calculation
