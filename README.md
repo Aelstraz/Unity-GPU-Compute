@@ -1,5 +1,5 @@
 # GPU Compute (Unity)
-GPU Compute provides an easy way to setup & execute GPU compute shaders in Unity.
+GPU Compute provides the ultimate & easiest way to setup & execute GPU compute shaders in Unity (additional features may be undocumented here).
 
 - Reduces the amount of code and complexity to execute a compute shader
 - Create, edit and read buffers easily (buffer strides & lengths are calculated automatically)
@@ -7,7 +7,9 @@ GPU Compute provides an easy way to setup & execute GPU compute shaders in Unity
 - Asynchronous execution
 - Track GPU memory usage
 - Track compute execution time
+- Buffer debugging
 - Centralized in a single class
+- Plus more!
 
 ![alt text](https://github.com/Aelstraz/Unity-GPU-Compute/blob/main/Screenshot.png?raw=true)
 
@@ -40,7 +42,7 @@ Buffer data, textures and variables values can be set like so:
 	gpuCompute.SetInt("myInt", myInt);
  	gpuCompute.SetFloat("myFloat", myFloat);
   	gpuCompute.SetVector("myVector", myVector);
-   	gpuCompute.SetBufferData("myVectorBuffer", ref myVectorBuffer);
+   	gpuCompute.SetBuffer("myVectorBuffer", ref myVectorBuffer);
    	gpuCompute.SetRenderTexture("myRenderTexture", myRenderTexture);
 
 Buffer data can be retrieved as shown (a reference list/array of the same data type and length must be supplied to write the buffer data to):
@@ -54,7 +56,7 @@ Global buffers can be set and retrieved in the same way as local buffers:
 
 	GPUCompute.SetGlobalBuffer("globalVertices", ref vertices);	
 	GPUCompute.CreateEmptyGlobalBuffer<Vector3>("myEmptyGlobalBuffer", myEmptyGlobalBufferLength);
- 	GPUCompute.SetBufferData("myGlobalVectorBuffer", ref myGlobalVectorBuffer);
+ 	GPUCompute.SetBuffer("myGlobalVectorBuffer", ref myGlobalVectorBuffer);
   	GPUCompute.GetBufferData("myGlobalUVBuffer", ref myGlobalUVBuffer);
  
 In order to use them in your compute shader, they first need to be linked to your GPU Compute instance as shown:
@@ -64,12 +66,7 @@ In order to use them in your compute shader, they first need to be linked to you
  
 ***
 ### Setting Thread Group Size:
-Thread group sizes can be automatically calculated based on your workload dimensions.
-First get the number of threads as declared in your compute shader, e.g: [numthreads(8, 8, 1)]:
-
-	Vector3Int shaderNumOfThreads = new Vector3Int(8, 8, 1);
-
-Then select one of the options below (1D, 2D, 3D) based on your workload needs. Thread group sizes can also be set manually.
+Thread group sizes can be automatically calculated based on your workload dimensions. Select one of the dimension options below (1D, 2D, 3D) based on your workload needs. Thread group sizes can also be set manually.
 ***
 ### Thread Group Size (1D):
 For a one-dimensional workload (e.g. an array) pass your job length and shader number of threads into the SetCalculatedThreadGroupSize() method:
@@ -94,13 +91,6 @@ Then in your compute shader the current index can be found like so:
 For a two-dimensional workload (e.g. a texture) pass the width, length and your compute shader number of threads into the SetCalculatedThreadGroupSize2D() method:
 
 	gpuCompute.SetCalculatedThreadGroupSize2D(width, length, shaderNumOfThreads);
- 
- Then in your compute shader the current index can be found like so:
-
-	void CSMain(uint3 id : SV_DispatchThreadID)
-	{
-		int2 index = int2(id.x, id.y);
-	}
 
 ***
 ### Setting Thread Group Size (3D):
@@ -148,18 +138,6 @@ BufferInfo containing the buffer data type, name and the associated ComputeBuffe
 
  	BufferInfo bufferInfo = gpuCompute.GetBufferInfo(name);
 	BufferInfo globalBufferInfo = gpuCompute.GetGlobalBufferInfo(name);
-  
-***
-# Example - Creating a subdivision plane:
-This example shows how to generate a subdivided plane using GPU Compute- showcasing the relatively small amount of simple GPU related code required to run two kernels in the compute shader.
-
-C# code
-
-![alt text](https://github.com/Aelstraz/Unity-GPU-Compute/blob/main/Example1.png?raw=true)
-
- Compute Shader code
-	
-![alt text](https://github.com/Aelstraz/Unity-GPU-Compute/blob/main/Example2.png?raw=true)
   
 ***
 ### Twitter: [@aelstraz](https://x.com/Aelstraz)
