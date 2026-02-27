@@ -27,7 +27,7 @@ When you are done with your GPU Compute instance, make sure to dispose it to pre
 
 	gpuCompute.Dipose();
  	gpuCompute.DisposeLocal();
-  	gpuCompute.DisposeGlobal();
+  	GPUCompute.DisposeGlobal();
 
 ***
 ### Setting & Getting Buffers/Textures/Variables:
@@ -56,8 +56,8 @@ Global buffers can be set and retrieved in the same way as local buffers:
 
 	GPUCompute.SetGlobalBuffer("globalVertices", ref vertices);	
 	GPUCompute.CreateEmptyGlobalBuffer<Vector3>("myEmptyGlobalBuffer", myEmptyGlobalBufferLength);
- 	GPUCompute.SetBuffer("myGlobalVectorBuffer", ref myGlobalVectorBuffer);
-  	GPUCompute.GetBufferData("myGlobalUVBuffer", ref myGlobalUVBuffer);
+ 	GPUCompute.SetGlobalBuffer("myGlobalVectorBuffer", ref myGlobalVectorBuffer);
+  	GPUCompute.GetGlobalBufferData("myGlobalUVBuffer", ref myGlobalUVBuffer);
  
 In order to use them in your compute shader, they first need to be linked to your GPU Compute instance as shown:
 
@@ -120,8 +120,8 @@ Memory used by the GPU is automatically tracked and can be viewed as either tota
  	gpuCompute.GetGPUMemoryUsed();
 	gpuCompute.GetGPUMemoryUsedFormatted();
 
- 	gpuCompute.GetGlobalGPUMemoryUsed();
-	gpuCompute.GetGlobalGPUMemoryUsedFormatted();
+ 	GPUCompute.GetGlobalGPUMemoryUsed();
+	GPUCompute.GetGlobalGPUMemoryUsedFormatted();
 
  	gpuCompute.GetTotalGPUMemoryUsed();
 	gpuCompute.GetTotalGPUMemoryUsedFormatted();
@@ -137,7 +137,7 @@ The amount of time it took for the last computation to finish is also tracked an
 BufferInfo containing the buffer data type, name and the associated ComputeBuffer can be retreived through the following methods (depending if the buffer is local or global):
 
  	BufferInfo bufferInfo = gpuCompute.GetBufferInfo(name);
-	BufferInfo globalBufferInfo = gpuCompute.GetGlobalBufferInfo(name);
+	BufferInfo globalBufferInfo = GPUCompute.GetGlobalBufferInfo(name);
   
 ***
 ### Twitter: [@aelstraz](https://x.com/Aelstraz)
