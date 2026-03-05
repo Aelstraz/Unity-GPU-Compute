@@ -16,9 +16,17 @@ GPU Compute provides the ultimate & easiest way to setup & execute GPU compute s
 - **Buffer Debugging** - Retrieve and inspect buffer contents for debugging purposes
 - **Centralized in a Single Class** - All GPU compute operations managed through one easy-to-use class
 
-![alt text](https://github.com/Aelstraz/Unity-GPU-Compute/blob/main/Screenshot.png?raw=true)
-
----
+```csharp
+using (GPUCompute gpuCompute = new GPUCompute(computeShader))
+{
+    gpuCompute.SetBuffer("myBuffer", ref myBuffer);
+    gpuCompute.SetFloat("myFloatVar", 2f);
+    Debug.Log("GPU Compute Memory Allocated: " + gpuCompute.GetGPUMemoryUsedFormatted());
+    gpuCompute.Execute();
+    gpuCompute.GetBufferData("myBuffer", ref myBuffer);
+    Debug.Log("Compute Time: " + gpuCompute.GetLastComputeTime());
+}
+```
 
 ## Table of Contents
 1. [Installation](#installation)
@@ -33,8 +41,6 @@ GPU Compute provides the ultimate & easiest way to setup & execute GPU compute s
 10. [Buffer Debugging](#buffer-debugging)
 11. [Advanced Features](#advanced-features)
 12. [Example Usage](#example-usage)
-
----
 
 ## Installation
 
@@ -395,10 +401,28 @@ Asynchronously retrieve render texture data:
 ```csharp
 StartCoroutine(gpuCompute.GetRenderTextureDataAsync("outputTexture"));
 
-gpuCompute.OnReadbackComplete += OnTextureReadbackComplete;
+gpuCompute.OnReadbackComplete += OnReadbackComplete;
 
-private void OnTextureReadbackComplete(AsyncGPUReadbackRequest request, string textureName)
+private void OnReadbackComplete(AsyncGPUReadbackRequest request, string textureName)
 {
+    Texture2D output = new Texture2D(request.width, request.height, TextureFormat.RGBAFloat, false);
+    GPUCompute.ReadbackRequestToTexture2D(ref request, ref output);
+}
+```
+
+Asynchronously retrieve global render texture data:
+
+Optional parameters can also be passed through for your own use.
+
+```csharp
+int myDataToPassThrough = 0;
+StartCoroutine(gpuCompute.GetGlobalRenderTextureDataAsync("outputTexture"), myDataToPassThrough);
+
+gpuCompute.OnGlobalReadbackComplete += OnGlobalReadbackComplete;
+
+private void OnGlobalReadbackComplete(AsyncGPUReadbackRequest request, string textureName, params object[] parameters)
+{
+    int myDataToPassThrough = (int)parameters[0];
     Texture2D output = new Texture2D(request.width, request.height, TextureFormat.RGBAFloat, false);
     GPUCompute.ReadbackRequestToTexture2D(ref request, ref output);
 }
