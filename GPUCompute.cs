@@ -45,11 +45,12 @@ namespace GPUComputeModule
 
         public delegate void OnExecuteCompleteDelegate(int kernelIndex);
         public delegate void OnReadbackCompleteDelegate(AsyncGPUReadbackRequest request, string name);
+        public delegate void OnGlobalReadbackCompleteDelegate(AsyncGPUReadbackRequest request, string name, params object[] parameters);
         public event OnExecuteCompleteDelegate OnExecuteComplete;
         public event OnReadbackCompleteDelegate OnReadbackComplete;
-        public static event OnReadbackCompleteDelegate OnGlobalReadbackComplete;
+        public static event OnGlobalReadbackCompleteDelegate OnGlobalReadbackComplete;
 
-        private enum Operation
+        private enum MathOperation
         {
             ADD,
             SUBTRACT
@@ -230,13 +231,13 @@ namespace GPUComputeModule
         {
             if (trackedMemoryObjectNames.Contains(name))
             {
-                UpdateStructMemoryUsage<int>(ref localGPUMemoryUsage, Operation.SUBTRACT);
+                UpdateStructMemoryUsage<int>(ref localGPUMemoryUsage, MathOperation.SUBTRACT);
             }
             else
             {
                 trackedMemoryObjectNames.Add(name);
             }
-            UpdateStructMemoryUsage<int>(ref localGPUMemoryUsage, Operation.ADD);
+            UpdateStructMemoryUsage<int>(ref localGPUMemoryUsage, MathOperation.ADD);
 
             computeShader.SetInt(name, value);
         }
@@ -250,13 +251,13 @@ namespace GPUComputeModule
         {
             if (trackedMemoryObjectNames.Contains(name))
             {
-                UpdateStructMemoryUsage<float>(ref localGPUMemoryUsage, Operation.SUBTRACT);
+                UpdateStructMemoryUsage<float>(ref localGPUMemoryUsage, MathOperation.SUBTRACT);
             }
             else
             {
                 trackedMemoryObjectNames.Add(name);
             }
-            UpdateStructMemoryUsage<float>(ref localGPUMemoryUsage, Operation.ADD);
+            UpdateStructMemoryUsage<float>(ref localGPUMemoryUsage, MathOperation.ADD);
 
             computeShader.SetFloat(name, value);
         }
@@ -272,7 +273,7 @@ namespace GPUComputeModule
             {
                 for (int i = 0; i < value.Length; i++)
                 {
-                    UpdateStructMemoryUsage<float>(ref localGPUMemoryUsage, Operation.SUBTRACT);
+                    UpdateStructMemoryUsage<float>(ref localGPUMemoryUsage, MathOperation.SUBTRACT);
                 }
             }
             else
@@ -281,7 +282,7 @@ namespace GPUComputeModule
             }
             for (int i = 0; i < value.Length; i++)
             {
-                UpdateStructMemoryUsage<float>(ref localGPUMemoryUsage, Operation.ADD);
+                UpdateStructMemoryUsage<float>(ref localGPUMemoryUsage, MathOperation.ADD);
             }
 
             computeShader.SetFloats(name, value);
@@ -296,13 +297,13 @@ namespace GPUComputeModule
         {
             if (trackedMemoryObjectNames.Contains(name))
             {
-                UpdateStructMemoryUsage<bool>(ref localGPUMemoryUsage, Operation.SUBTRACT);
+                UpdateStructMemoryUsage<bool>(ref localGPUMemoryUsage, MathOperation.SUBTRACT);
             }
             else
             {
                 trackedMemoryObjectNames.Add(name);
             }
-            UpdateStructMemoryUsage<bool>(ref localGPUMemoryUsage, Operation.ADD);
+            UpdateStructMemoryUsage<bool>(ref localGPUMemoryUsage, MathOperation.ADD);
 
             computeShader.SetBool(name, value);
         }
@@ -316,13 +317,13 @@ namespace GPUComputeModule
         {
             if (trackedMemoryObjectNames.Contains(name))
             {
-                UpdateStructMemoryUsage<Vector4>(ref localGPUMemoryUsage, Operation.SUBTRACT);
+                UpdateStructMemoryUsage<Vector4>(ref localGPUMemoryUsage, MathOperation.SUBTRACT);
             }
             else
             {
                 trackedMemoryObjectNames.Add(name);
             }
-            UpdateStructMemoryUsage<Vector4>(ref localGPUMemoryUsage, Operation.ADD);
+            UpdateStructMemoryUsage<Vector4>(ref localGPUMemoryUsage, MathOperation.ADD);
 
             computeShader.SetVector(name, value);
         }
@@ -336,13 +337,13 @@ namespace GPUComputeModule
         {
             if (trackedMemoryObjectNames.Contains(name))
             {
-                UpdateStructMemoryUsage<Vector4>(ref localGPUMemoryUsage, Operation.SUBTRACT);
+                UpdateStructMemoryUsage<Vector4>(ref localGPUMemoryUsage, MathOperation.SUBTRACT);
             }
             else
             {
                 trackedMemoryObjectNames.Add(name);
             }
-            UpdateStructMemoryUsage<Vector4>(ref localGPUMemoryUsage, Operation.ADD);
+            UpdateStructMemoryUsage<Vector4>(ref localGPUMemoryUsage, MathOperation.ADD);
 
             computeShader.SetVector(name, value);
         }
@@ -356,13 +357,13 @@ namespace GPUComputeModule
         {
             if (trackedMemoryObjectNames.Contains(name))
             {
-                UpdateStructMemoryUsage<Vector4>(ref localGPUMemoryUsage, Operation.SUBTRACT);
+                UpdateStructMemoryUsage<Vector4>(ref localGPUMemoryUsage, MathOperation.SUBTRACT);
             }
             else
             {
                 trackedMemoryObjectNames.Add(name);
             }
-            UpdateStructMemoryUsage<Vector4>(ref localGPUMemoryUsage, Operation.ADD);
+            UpdateStructMemoryUsage<Vector4>(ref localGPUMemoryUsage, MathOperation.ADD);
 
             computeShader.SetVector(name, value);
         }
@@ -376,13 +377,13 @@ namespace GPUComputeModule
         {
             if (trackedMemoryObjectNames.Contains(name))
             {
-                UpdateStructMemoryUsage<Vector4>(ref localGPUMemoryUsage, Operation.SUBTRACT);
+                UpdateStructMemoryUsage<Vector4>(ref localGPUMemoryUsage, MathOperation.SUBTRACT);
             }
             else
             {
                 trackedMemoryObjectNames.Add(name);
             }
-            UpdateStructMemoryUsage<Vector4>(ref localGPUMemoryUsage, Operation.ADD);
+            UpdateStructMemoryUsage<Vector4>(ref localGPUMemoryUsage, MathOperation.ADD);
 
             computeShader.SetVector(name, new Vector3(value.x, value.y, value.z));
         }
@@ -396,13 +397,13 @@ namespace GPUComputeModule
         {
             if (trackedMemoryObjectNames.Contains(name))
             {
-                UpdateStructMemoryUsage<Vector4>(ref localGPUMemoryUsage, Operation.SUBTRACT);
+                UpdateStructMemoryUsage<Vector4>(ref localGPUMemoryUsage, MathOperation.SUBTRACT);
             }
             else
             {
                 trackedMemoryObjectNames.Add(name);
             }
-            UpdateStructMemoryUsage<Vector4>(ref localGPUMemoryUsage, Operation.ADD);
+            UpdateStructMemoryUsage<Vector4>(ref localGPUMemoryUsage, MathOperation.ADD);
 
             computeShader.SetVector(name, new Vector2(value.x, value.y));
         }
@@ -418,7 +419,7 @@ namespace GPUComputeModule
             {
                 for (int i = 0; i < value.Length; i++)
                 {
-                    UpdateStructMemoryUsage<Vector4>(ref localGPUMemoryUsage, Operation.SUBTRACT);
+                    UpdateStructMemoryUsage<Vector4>(ref localGPUMemoryUsage, MathOperation.SUBTRACT);
                 }
             }
             else
@@ -427,7 +428,7 @@ namespace GPUComputeModule
             }
             for (int i = 0; i < value.Length; i++)
             {
-                UpdateStructMemoryUsage<Vector4>(ref localGPUMemoryUsage, Operation.ADD);
+                UpdateStructMemoryUsage<Vector4>(ref localGPUMemoryUsage, MathOperation.ADD);
             }
 
             computeShader.SetVectorArray(name, value);
@@ -442,13 +443,13 @@ namespace GPUComputeModule
         {
             if (trackedMemoryObjectNames.Contains(name))
             {
-                UpdateStructMemoryUsage<Matrix4x4>(ref localGPUMemoryUsage, Operation.SUBTRACT);
+                UpdateStructMemoryUsage<Matrix4x4>(ref localGPUMemoryUsage, MathOperation.SUBTRACT);
             }
             else
             {
                 trackedMemoryObjectNames.Add(name);
             }
-            UpdateStructMemoryUsage<Matrix4x4>(ref localGPUMemoryUsage, Operation.ADD);
+            UpdateStructMemoryUsage<Matrix4x4>(ref localGPUMemoryUsage, MathOperation.ADD);
 
             computeShader.SetMatrix(name, value);
         }
@@ -464,7 +465,7 @@ namespace GPUComputeModule
             {
                 for (int i = 0; i < value.Length; i++)
                 {
-                    UpdateStructMemoryUsage<Matrix4x4>(ref localGPUMemoryUsage, Operation.SUBTRACT);
+                    UpdateStructMemoryUsage<Matrix4x4>(ref localGPUMemoryUsage, MathOperation.SUBTRACT);
                 }
             }
             else
@@ -473,7 +474,7 @@ namespace GPUComputeModule
             }
             for (int i = 0; i < value.Length; i++)
             {
-                UpdateStructMemoryUsage<Matrix4x4>(ref localGPUMemoryUsage, Operation.ADD);
+                UpdateStructMemoryUsage<Matrix4x4>(ref localGPUMemoryUsage, MathOperation.ADD);
             }
 
             computeShader.SetMatrixArray(name, value);
@@ -534,13 +535,13 @@ namespace GPUComputeModule
         {
             if (trackedGlobalMemoryObjectNames.Contains(name))
             {
-                UpdateStructMemoryUsage<int>(ref globalGPUMemoryUsage, Operation.SUBTRACT);
+                UpdateStructMemoryUsage<int>(ref globalGPUMemoryUsage, MathOperation.SUBTRACT);
             }
             else
             {
                 trackedGlobalMemoryObjectNames.Add(name);
             }
-            UpdateStructMemoryUsage<int>(ref globalGPUMemoryUsage, Operation.ADD);
+            UpdateStructMemoryUsage<int>(ref globalGPUMemoryUsage, MathOperation.ADD);
 
             Shader.SetGlobalInteger(name, value);
         }
@@ -554,13 +555,13 @@ namespace GPUComputeModule
         {
             if (trackedGlobalMemoryObjectNames.Contains(name))
             {
-                UpdateStructMemoryUsage<float>(ref globalGPUMemoryUsage, Operation.SUBTRACT);
+                UpdateStructMemoryUsage<float>(ref globalGPUMemoryUsage, MathOperation.SUBTRACT);
             }
             else
             {
                 trackedGlobalMemoryObjectNames.Add(name);
             }
-            UpdateStructMemoryUsage<float>(ref globalGPUMemoryUsage, Operation.ADD);
+            UpdateStructMemoryUsage<float>(ref globalGPUMemoryUsage, MathOperation.ADD);
 
             Shader.SetGlobalFloat(name, value);
         }
@@ -576,7 +577,7 @@ namespace GPUComputeModule
             {
                 foreach (var v in value)
                 {
-                    UpdateStructMemoryUsage<float>(ref globalGPUMemoryUsage, Operation.SUBTRACT);
+                    UpdateStructMemoryUsage<float>(ref globalGPUMemoryUsage, MathOperation.SUBTRACT);
                 }
             }
             else
@@ -585,7 +586,7 @@ namespace GPUComputeModule
             }
             foreach (var v in value)
             {
-                UpdateStructMemoryUsage<float>(ref globalGPUMemoryUsage, Operation.ADD);
+                UpdateStructMemoryUsage<float>(ref globalGPUMemoryUsage, MathOperation.ADD);
             }
 
             Shader.SetGlobalFloatArray(name, value);
@@ -602,7 +603,7 @@ namespace GPUComputeModule
             {
                 foreach (var v in value)
                 {
-                    UpdateStructMemoryUsage<float>(ref globalGPUMemoryUsage, Operation.SUBTRACT);
+                    UpdateStructMemoryUsage<float>(ref globalGPUMemoryUsage, MathOperation.SUBTRACT);
                 }
             }
             else
@@ -611,7 +612,7 @@ namespace GPUComputeModule
             }
             foreach (var v in value)
             {
-                UpdateStructMemoryUsage<float>(ref globalGPUMemoryUsage, Operation.ADD);
+                UpdateStructMemoryUsage<float>(ref globalGPUMemoryUsage, MathOperation.ADD);
             }
 
             Shader.SetGlobalFloatArray(name, value);
@@ -626,13 +627,13 @@ namespace GPUComputeModule
         {
             if (trackedGlobalMemoryObjectNames.Contains(name))
             {
-                UpdateStructMemoryUsage<Vector4>(ref globalGPUMemoryUsage, Operation.SUBTRACT);
+                UpdateStructMemoryUsage<Vector4>(ref globalGPUMemoryUsage, MathOperation.SUBTRACT);
             }
             else
             {
                 trackedGlobalMemoryObjectNames.Add(name);
             }
-            UpdateStructMemoryUsage<Vector4>(ref globalGPUMemoryUsage, Operation.ADD);
+            UpdateStructMemoryUsage<Vector4>(ref globalGPUMemoryUsage, MathOperation.ADD);
 
             Shader.SetGlobalVector(name, value);
         }
@@ -646,13 +647,13 @@ namespace GPUComputeModule
         {
             if (trackedGlobalMemoryObjectNames.Contains(name))
             {
-                UpdateStructMemoryUsage<Vector4>(ref globalGPUMemoryUsage, Operation.SUBTRACT);
+                UpdateStructMemoryUsage<Vector4>(ref globalGPUMemoryUsage, MathOperation.SUBTRACT);
             }
             else
             {
                 trackedGlobalMemoryObjectNames.Add(name);
             }
-            UpdateStructMemoryUsage<Vector4>(ref globalGPUMemoryUsage, Operation.ADD);
+            UpdateStructMemoryUsage<Vector4>(ref globalGPUMemoryUsage, MathOperation.ADD);
 
             Shader.SetGlobalVector(name, value);
         }
@@ -666,13 +667,13 @@ namespace GPUComputeModule
         {
             if (trackedGlobalMemoryObjectNames.Contains(name))
             {
-                UpdateStructMemoryUsage<Vector4>(ref globalGPUMemoryUsage, Operation.SUBTRACT);
+                UpdateStructMemoryUsage<Vector4>(ref globalGPUMemoryUsage, MathOperation.SUBTRACT);
             }
             else
             {
                 trackedGlobalMemoryObjectNames.Add(name);
             }
-            UpdateStructMemoryUsage<Vector4>(ref globalGPUMemoryUsage, Operation.ADD);
+            UpdateStructMemoryUsage<Vector4>(ref globalGPUMemoryUsage, MathOperation.ADD);
 
             Shader.SetGlobalVector(name, value);
         }
@@ -686,13 +687,13 @@ namespace GPUComputeModule
         {
             if (trackedGlobalMemoryObjectNames.Contains(name))
             {
-                UpdateStructMemoryUsage<Vector4>(ref globalGPUMemoryUsage, Operation.SUBTRACT);
+                UpdateStructMemoryUsage<Vector4>(ref globalGPUMemoryUsage, MathOperation.SUBTRACT);
             }
             else
             {
                 trackedGlobalMemoryObjectNames.Add(name);
             }
-            UpdateStructMemoryUsage<Vector4>(ref globalGPUMemoryUsage, Operation.ADD);
+            UpdateStructMemoryUsage<Vector4>(ref globalGPUMemoryUsage, MathOperation.ADD);
 
             Shader.SetGlobalVector(name, (Vector2)value);
         }
@@ -706,13 +707,13 @@ namespace GPUComputeModule
         {
             if (trackedGlobalMemoryObjectNames.Contains(name))
             {
-                UpdateStructMemoryUsage<Vector4>(ref globalGPUMemoryUsage, Operation.SUBTRACT);
+                UpdateStructMemoryUsage<Vector4>(ref globalGPUMemoryUsage, MathOperation.SUBTRACT);
             }
             else
             {
                 trackedGlobalMemoryObjectNames.Add(name);
             }
-            UpdateStructMemoryUsage<Vector4>(ref globalGPUMemoryUsage, Operation.ADD);
+            UpdateStructMemoryUsage<Vector4>(ref globalGPUMemoryUsage, MathOperation.ADD);
 
             Shader.SetGlobalVector(name, (Vector3)value);
         }
@@ -728,7 +729,7 @@ namespace GPUComputeModule
             {
                 foreach (var v in value)
                 {
-                    UpdateStructMemoryUsage<Vector4>(ref globalGPUMemoryUsage, Operation.SUBTRACT);
+                    UpdateStructMemoryUsage<Vector4>(ref globalGPUMemoryUsage, MathOperation.SUBTRACT);
                 }
             }
             else
@@ -737,7 +738,7 @@ namespace GPUComputeModule
             }
             foreach (var v in value)
             {
-                UpdateStructMemoryUsage<Vector4>(ref globalGPUMemoryUsage, Operation.ADD);
+                UpdateStructMemoryUsage<Vector4>(ref globalGPUMemoryUsage, MathOperation.ADD);
             }
 
             Shader.SetGlobalVectorArray(name, value);
@@ -754,7 +755,7 @@ namespace GPUComputeModule
             {
                 foreach (var v in value)
                 {
-                    UpdateStructMemoryUsage<Vector4>(ref globalGPUMemoryUsage, Operation.SUBTRACT);
+                    UpdateStructMemoryUsage<Vector4>(ref globalGPUMemoryUsage, MathOperation.SUBTRACT);
                 }
             }
             else
@@ -763,7 +764,7 @@ namespace GPUComputeModule
             }
             foreach (var v in value)
             {
-                UpdateStructMemoryUsage<Vector4>(ref globalGPUMemoryUsage, Operation.ADD);
+                UpdateStructMemoryUsage<Vector4>(ref globalGPUMemoryUsage, MathOperation.ADD);
             }
 
             Shader.SetGlobalVectorArray(name, value);
@@ -778,13 +779,13 @@ namespace GPUComputeModule
         {
             if (trackedGlobalMemoryObjectNames.Contains(name))
             {
-                UpdateStructMemoryUsage<Matrix4x4>(ref globalGPUMemoryUsage, Operation.SUBTRACT);
+                UpdateStructMemoryUsage<Matrix4x4>(ref globalGPUMemoryUsage, MathOperation.SUBTRACT);
             }
             else
             {
                 trackedGlobalMemoryObjectNames.Add(name);
             }
-            UpdateStructMemoryUsage<Matrix4x4>(ref globalGPUMemoryUsage, Operation.ADD);
+            UpdateStructMemoryUsage<Matrix4x4>(ref globalGPUMemoryUsage, MathOperation.ADD);
 
             Shader.SetGlobalMatrix(name, value);
         }
@@ -800,7 +801,7 @@ namespace GPUComputeModule
             {
                 foreach (var v in value)
                 {
-                    UpdateStructMemoryUsage<Matrix4x4>(ref globalGPUMemoryUsage, Operation.SUBTRACT);
+                    UpdateStructMemoryUsage<Matrix4x4>(ref globalGPUMemoryUsage, MathOperation.SUBTRACT);
                 }
             }
             else
@@ -809,7 +810,7 @@ namespace GPUComputeModule
             }
             foreach (var v in value)
             {
-                UpdateStructMemoryUsage<Matrix4x4>(ref globalGPUMemoryUsage, Operation.ADD);
+                UpdateStructMemoryUsage<Matrix4x4>(ref globalGPUMemoryUsage, MathOperation.ADD);
             }
 
             Shader.SetGlobalMatrixArray(name, value);
@@ -826,7 +827,7 @@ namespace GPUComputeModule
             {
                 foreach (var v in value)
                 {
-                    UpdateStructMemoryUsage<Matrix4x4>(ref globalGPUMemoryUsage, Operation.SUBTRACT);
+                    UpdateStructMemoryUsage<Matrix4x4>(ref globalGPUMemoryUsage, MathOperation.SUBTRACT);
                 }
             }
             else
@@ -835,7 +836,7 @@ namespace GPUComputeModule
             }
             foreach (var v in value)
             {
-                UpdateStructMemoryUsage<Matrix4x4>(ref globalGPUMemoryUsage, Operation.ADD);
+                UpdateStructMemoryUsage<Matrix4x4>(ref globalGPUMemoryUsage, MathOperation.ADD);
             }
 
             Shader.SetGlobalMatrixArray(name, value);
@@ -850,13 +851,13 @@ namespace GPUComputeModule
         {
             if (trackedGlobalMemoryObjectNames.Contains(name))
             {
-                UpdateStructMemoryUsage<Color>(ref globalGPUMemoryUsage, Operation.SUBTRACT);
+                UpdateStructMemoryUsage<Color>(ref globalGPUMemoryUsage, MathOperation.SUBTRACT);
             }
             else
             {
                 trackedGlobalMemoryObjectNames.Add(name);
             }
-            UpdateStructMemoryUsage<Color>(ref globalGPUMemoryUsage, Operation.ADD);
+            UpdateStructMemoryUsage<Color>(ref globalGPUMemoryUsage, MathOperation.ADD);
 
             Shader.SetGlobalColor(name, value);
         }
@@ -1079,7 +1080,7 @@ namespace GPUComputeModule
                 {
                     computeShader.SetBuffer(kernelIndex, name, computeBuffer);
                 }
-                UpdateBufferMemoryUsage(ref localGPUMemoryUsage, stride, bufferLength, Operation.ADD);
+                UpdateBufferMemoryUsage(ref localGPUMemoryUsage, stride, bufferLength, MathOperation.ADD);
             }
         }
 
@@ -1103,7 +1104,7 @@ namespace GPUComputeModule
             {
                 ComputeBuffer computeBuffer = new ComputeBuffer(bufferLength, stride, computeBufferType, computeBufferMode);
                 globalBuffers.Add(new BufferInfo(name, computeBuffer, typeof(T), computeBufferType, computeBufferMode, new int[0]));
-                UpdateBufferMemoryUsage(ref globalGPUMemoryUsage, stride, bufferLength, Operation.ADD);
+                UpdateBufferMemoryUsage(ref globalGPUMemoryUsage, stride, bufferLength, MathOperation.ADD);
             }
         }
 
@@ -1150,7 +1151,7 @@ namespace GPUComputeModule
                 {
                     computeShader.SetTexture(kernelIndex, name, texture, mipLevel, renderTextureSubElement);
                 }
-                UpdateTextureMemoryUsage(ref texture, ref localGPUMemoryUsage, Operation.ADD);
+                UpdateTextureMemoryUsage(ref texture, ref localGPUMemoryUsage, MathOperation.ADD);
             }
             else
             {
@@ -1177,7 +1178,7 @@ namespace GPUComputeModule
                 texture.anisoLevel = anisoLevel;
                 texture.Create();
                 globalRenderTextures.Add(texture);
-                UpdateTextureMemoryUsage(ref texture, ref globalGPUMemoryUsage, Operation.ADD);
+                UpdateTextureMemoryUsage(ref texture, ref globalGPUMemoryUsage, MathOperation.ADD);
             }
             else
             {
@@ -1396,13 +1397,13 @@ namespace GPUComputeModule
         {
             if (trackedMemoryObjectNames.Contains(name))
             {
-                UpdateTextureMemoryUsage(ref value, ref localGPUMemoryUsage, Operation.SUBTRACT);
+                UpdateTextureMemoryUsage(ref value, ref localGPUMemoryUsage, MathOperation.SUBTRACT);
             }
             else
             {
                 trackedMemoryObjectNames.Add(name);
             }
-            UpdateTextureMemoryUsage(ref value, ref localGPUMemoryUsage, Operation.ADD);
+            UpdateTextureMemoryUsage(ref value, ref localGPUMemoryUsage, MathOperation.ADD);
 
             foreach (int kernelIndex in kernelIndices)
             {
@@ -1433,13 +1434,13 @@ namespace GPUComputeModule
         {
             if (trackedMemoryObjectNames.Contains(name))
             {
-                UpdateTextureMemoryUsage(ref value, ref localGPUMemoryUsage, Operation.SUBTRACT);
+                UpdateTextureMemoryUsage(ref value, ref localGPUMemoryUsage, MathOperation.SUBTRACT);
             }
             else
             {
                 trackedMemoryObjectNames.Add(name);
             }
-            UpdateTextureMemoryUsage(ref value, ref localGPUMemoryUsage, Operation.ADD);
+            UpdateTextureMemoryUsage(ref value, ref localGPUMemoryUsage, MathOperation.ADD);
 
             foreach (int kernelIndex in kernelIndices)
             {
@@ -1470,13 +1471,13 @@ namespace GPUComputeModule
         {
             if (trackedMemoryObjectNames.Contains(name))
             {
-                UpdateTextureMemoryUsage(ref value, ref localGPUMemoryUsage, Operation.SUBTRACT);
+                UpdateTextureMemoryUsage(ref value, ref localGPUMemoryUsage, MathOperation.SUBTRACT);
             }
             else
             {
                 trackedMemoryObjectNames.Add(name);
             }
-            UpdateTextureMemoryUsage(ref value, ref localGPUMemoryUsage, Operation.ADD);
+            UpdateTextureMemoryUsage(ref value, ref localGPUMemoryUsage, MathOperation.ADD);
 
             foreach (int kernelIndex in kernelIndices)
             {
@@ -1509,13 +1510,13 @@ namespace GPUComputeModule
         {
             if (renderTextures.Contains(value))
             {
-                UpdateTextureMemoryUsage(ref value, ref localGPUMemoryUsage, Operation.SUBTRACT);
+                UpdateTextureMemoryUsage(ref value, ref localGPUMemoryUsage, MathOperation.SUBTRACT);
             }
             else
             {
                 renderTextures.Add(value);
             }
-            UpdateTextureMemoryUsage(ref value, ref localGPUMemoryUsage, Operation.ADD);
+            UpdateTextureMemoryUsage(ref value, ref localGPUMemoryUsage, MathOperation.ADD);
 
             foreach (int kernelIndex in kernelIndices)
             {
@@ -1532,13 +1533,13 @@ namespace GPUComputeModule
         {
             if (trackedGlobalMemoryObjectNames.Contains(name))
             {
-                UpdateTextureMemoryUsage(ref value, ref globalGPUMemoryUsage, Operation.SUBTRACT);
+                UpdateTextureMemoryUsage(ref value, ref globalGPUMemoryUsage, MathOperation.SUBTRACT);
             }
             else
             {
                 trackedGlobalMemoryObjectNames.Add(name);
             }
-            UpdateTextureMemoryUsage(ref value, ref globalGPUMemoryUsage, Operation.ADD);
+            UpdateTextureMemoryUsage(ref value, ref globalGPUMemoryUsage, MathOperation.ADD);
 
             Shader.SetGlobalTexture(name, value);
         }
@@ -1552,13 +1553,13 @@ namespace GPUComputeModule
         {
             if (trackedGlobalMemoryObjectNames.Contains(name))
             {
-                UpdateTextureMemoryUsage(ref value, ref globalGPUMemoryUsage, Operation.SUBTRACT);
+                UpdateTextureMemoryUsage(ref value, ref globalGPUMemoryUsage, MathOperation.SUBTRACT);
             }
             else
             {
                 trackedGlobalMemoryObjectNames.Add(name);
             }
-            UpdateTextureMemoryUsage(ref value, ref globalGPUMemoryUsage, Operation.ADD);
+            UpdateTextureMemoryUsage(ref value, ref globalGPUMemoryUsage, MathOperation.ADD);
 
             Shader.SetGlobalTexture(name, value);
         }
@@ -1572,13 +1573,13 @@ namespace GPUComputeModule
         {
             if (trackedGlobalMemoryObjectNames.Contains(name))
             {
-                UpdateTextureMemoryUsage(ref value, ref globalGPUMemoryUsage, Operation.SUBTRACT);
+                UpdateTextureMemoryUsage(ref value, ref globalGPUMemoryUsage, MathOperation.SUBTRACT);
             }
             else
             {
                 trackedGlobalMemoryObjectNames.Add(name);
             }
-            UpdateTextureMemoryUsage(ref value, ref globalGPUMemoryUsage, Operation.ADD);
+            UpdateTextureMemoryUsage(ref value, ref globalGPUMemoryUsage, MathOperation.ADD);
 
             Shader.SetGlobalTexture(name, value);
         }
@@ -1596,134 +1597,112 @@ namespace GPUComputeModule
 
         #region Retrieving Buffer/RenderTexture Data
         /// <summary>
-        /// Gets the value of a RenderTexture in the compute shader
+        /// Gets the value of a render texture and copies it to a 2D texture on the CPU
         /// </summary>
         /// <param name="name">The name of the render texture</param>
         /// <param name="texture">The 2D texture to write to</param>
-        public void GetRenderTextureData(string name, ref Texture2D texture)
+        /// <param name="width">Optional. Width of the data to copy. If value is not specified, the entire width of the texture is copied</param>
+        /// <param name="height">Optional. Height of the data to copy. If value is not specified, the entire height of the texture is copied</param>
+        /// <param name="x">Optional. Offset x position in the render texture</param>
+        /// <param name="y">Optional. Offset y position in the render texture</param>
+        public void GetRenderTextureData(string name, ref Texture2D texture, int width = -1, int height = -1, int x = 0, int y = 0)
         {
             RenderTexture renderTexture = GetRenderTexture(name);
-            if (renderTexture == null)
+            int depth = 0;
+            if (TexturesMatch(renderTexture, texture, 0, TextureDimension.Tex2D, ref width, ref height, ref depth, x, y, 0))
             {
-                Debug.LogError("Unable to get render texture data " + name + ", render texture not found");
-            }
-            else if (texture == null)
-            {
-                Debug.LogError("Unable to get render texture data " + name + ", the supplied ref texture is null");
-            }
-            else if (renderTexture.width != texture.width || renderTexture.height != texture.height)
-            {
-                Debug.LogError("Unable to get render texture data " + name + ", render texture has the wrong width/height");
-            }
-            else if (renderTexture.volumeDepth > 0)
-            {
-                Debug.LogError("Unable to get render texture data " + name + ", render texture has a depth of " + renderTexture.volumeDepth + ", and the supplied ref texture is 2D");
-            }
-            else
-            {
+                RenderTexture previous = RenderTexture.active;
                 RenderTexture.active = renderTexture;
-                texture.ReadPixels(new Rect(0, 0, renderTexture.width, renderTexture.height), 0, 0);
-                texture.Apply();
-                RenderTexture.active = null;
+                texture.ReadPixels(new Rect(x, y, width, height), x, y, false);
+                texture.Apply(false);
+                RenderTexture.active = previous;
             }
         }
 
         /// <summary>
-        /// Gets the value of a RenderTexture in the compute shader
+        /// Gets the value of a render texture and copies it to a 3D texture on the CPU. The dimensions of the render texture must match the dimensions of the 3D texture
         /// </summary>
-        /// <param name="name">The name of the render texture</param>
-        /// <param name="texture">The 3D texture to write to</param>
+        /// <param name="name">The name of the render texture to get data from</param>
+        /// <param name="texture">The 3D texture to copy the data to</param>
         public void GetRenderTextureData(string name, ref Texture3D texture)
         {
             RenderTexture renderTexture = GetRenderTexture(name);
-            if (renderTexture == null)
+            int width = 0, height = 0, depth = 0;
+            if (TexturesMatch(renderTexture, texture, texture.depth, TextureDimension.Tex3D, ref width, ref height, ref depth, 0, 0, 0))
             {
-                Debug.LogError("Unable to get render texture data " + name + ", render texture not found");
-            }
-            else if (texture == null)
-            {
-                Debug.LogError("Unable to get render texture data " + name + ", the supplied ref texture is null");
-            }
-            else if (renderTexture.width != texture.width || renderTexture.height != texture.height)
-            {
-                Debug.LogError("Unable to get render texture data " + name + ", render texture has the wrong width/height");
-            }
-            else if (renderTexture.volumeDepth == 0)
-            {
-                Debug.LogError("Unable to get render texture data " + name + ", render texture has a depth of " + renderTexture.volumeDepth + ", and the supplied ref texture is 3D");
-            }
-            else
-            {
-                RenderTexture.active = renderTexture;
                 texture.CopyPixels(renderTexture);
-                texture.Apply();
-                RenderTexture.active = null;
+                texture.Apply(false);
             }
         }
 
         /// <summary>
-        /// Gets the value of a global RenderTexture in the compute shader
+        /// Gets the data from a render texture and copies it to a 2D texture array on the CPU. The dimensions of the render texture must match the dimensions of the 2D texture array
+        /// </summary>
+        /// <param name="name">The name of the render texture to get data from</param>
+        /// <param name="texture">The 2D texture array to copy the data to</param>
+        public void GetRenderTextureData(string name, ref Texture2DArray texture)
+        {
+            RenderTexture renderTexture = GetRenderTexture(name);
+            int width = 0, height = 0, depth = 0;
+            if (TexturesMatch(renderTexture, texture, texture.depth, TextureDimension.Tex2DArray, ref width, ref height, ref depth, 0, 0, 0))
+            {
+                texture.CopyPixels(renderTexture);
+                texture.Apply(false);
+            }
+        }
+
+        /// <summary>
+        /// Gets the value of a global render texture and copies it to a 2D texture on the CPU
         /// </summary>
         /// <param name="name">The name of the global render texture</param>
         /// <param name="texture">The 2D texture to write to</param>
-        public static void GetGlobalRenderTextureData(string name, ref Texture2D texture)
+        /// <param name="width">Optional. Width of the data to copy. If value is not specified, the entire width of the texture is copied</param>
+        /// <param name="height">Optional. Height of the data to copy. If value is not specified, the entire height of the texture is copied</param>
+        /// <param name="x">Optional. Offset x position in the render texture</param>
+        /// <param name="y">Optional. Offset y position in the render texture</param>
+        public static void GetGlobalRenderTextureData(string name, ref Texture2D texture, int width = -1, int height = -1, int x = 0, int y = 0)
         {
             RenderTexture renderTexture = GetGlobalRenderTexture(name);
-            if (renderTexture == null)
+            int depth = 0;
+            if (TexturesMatch(renderTexture, texture, 0, TextureDimension.Tex2D, ref width, ref height, ref depth, x, y, 0))
             {
-                Debug.LogError("Unable to get global render texture data " + name + ", global render texture not found");
-            }
-            else if (texture == null)
-            {
-                Debug.LogError("Unable to get render texture data " + name + ", the supplied ref texture is null");
-            }
-            else if (renderTexture.width != texture.width || renderTexture.height != texture.height)
-            {
-                Debug.LogError("Unable to get global render texture data " + name + ", global render texture has the wrong width/height");
-            }
-            else if (renderTexture.volumeDepth > 0)
-            {
-                Debug.LogError("Unable to get global render texture data " + name + ", global render texture has a depth of " + renderTexture.volumeDepth + ", and the supplied ref texture is 2D");
-            }
-            else
-            {
+                RenderTexture previous = RenderTexture.active;
                 RenderTexture.active = renderTexture;
-                texture.ReadPixels(new Rect(0, 0, renderTexture.width, renderTexture.height), 0, 0);
-                texture.Apply();
-                RenderTexture.active = null;
+                texture.ReadPixels(new Rect(x, y, width, height), x, y, false);
+                texture.Apply(false);
+                RenderTexture.active = previous;
             }
         }
 
         /// <summary>
-        /// Gets the value of a global RenderTexture in the compute shader
+        /// Gets the value of a global render texture and copies it to a 3D texture on the CPU. The dimensions of the render texture must match the dimensions of the 3D texture.
         /// </summary>
-        /// <param name="name">The name of the global render texture</param>
-        /// <param name="texture">The 3D texture to write to</param>
+        /// <param name="name">The name of the global render texture to get data from</param>
+        /// <param name="texture">The 3D texture to copy the data to</param>
         public static void GetGlobalRenderTextureData(string name, ref Texture3D texture)
         {
             RenderTexture renderTexture = GetGlobalRenderTexture(name);
-            if (renderTexture == null)
+            int width = 0, height = 0, depth = 0;
+            if (TexturesMatch(renderTexture, texture, texture.depth, TextureDimension.Tex3D, ref width, ref height, ref depth, 0, 0, 0))
             {
-                Debug.LogError("Unable to get global render texture data " + name + ", global render texture not found");
-            }
-            else if (texture == null)
-            {
-                Debug.LogError("Unable to get render texture data " + name + ", the supplied ref texture is null");
-            }
-            else if (renderTexture.width != texture.width || renderTexture.height != texture.height)
-            {
-                Debug.LogError("Unable to get global render texture data " + name + ", global render texture has the wrong width/height");
-            }
-            else if (renderTexture.volumeDepth == 0)
-            {
-                Debug.LogError("Unable to get global render texture data " + name + ", global render texture has a depth of " + renderTexture.volumeDepth + ", and the supplied ref texture is 3D");
-            }
-            else
-            {
-                RenderTexture.active = renderTexture;
                 texture.CopyPixels(renderTexture);
-                texture.Apply();
-                RenderTexture.active = null;
+                texture.Apply(false);
+            }
+        }
+
+        /// <summary>
+        /// Gets the value of a global render texture and copies it to a 2D texture array on the CPU. The dimensions of the render texture must match the dimensions of the 2D texture array.
+        /// </summary>
+        /// <param name="name">The name of the global render texture to get data from</param>
+        /// <param name="texture">The 2D texture array to copy the data to</param>
+        public static void GetGlobalRenderTextureData(string name, ref Texture2DArray texture)
+        {
+            RenderTexture renderTexture = GetGlobalRenderTexture(name);
+            int width = 0, height = 0, depth = 0;
+            if (TexturesMatch(renderTexture, texture, texture.depth, TextureDimension.Tex2DArray, ref width, ref height, ref depth, 0, 0, 0))
+            {
+                texture.CopyPixels(renderTexture);
+                texture.Apply(false);
             }
         }
 
@@ -1733,20 +1712,15 @@ namespace GPUComputeModule
         /// <typeparam name="T">The struct type of the buffer</typeparam>
         /// <param name="name">The name of the buffer</param>
         /// <param name="output">The target to output the buffer data to</param>
-        public void GetBufferData<T>(string name, ref T[] output) where T : struct
+        /// <param name="outputStartIndex">Optional. The start index of the output array</param>
+        /// <param name="bufferStartIndex">Optional. The start index of the buffer</param>
+        /// <param name="count">Optional. The number of elements to copy from the buffer. If count is <= 0, then all elements will be copied</param>
+        public void GetBufferData<T>(string name, ref T[] output, int outputStartIndex = 0, int bufferStartIndex = 0, int count = -1) where T : struct
         {
             BufferInfo bufferData = GetBuffer(name);
-            if (string.IsNullOrEmpty(bufferData.name))
+            if (BuffersMatch<T>(name, bufferData, output.Length, outputStartIndex, bufferStartIndex, ref count))
             {
-                Debug.LogError("Unable to get buffer data " + name + ", buffer not found");
-            }
-            else if (bufferData.dataType != typeof(T))
-            {
-                Debug.LogError("Unable to get buffer data " + name + ", supplied type is incorrect. BufferType=" + bufferData.dataType + ", SuppliedType=" + typeof(T));
-            }
-            else
-            {
-                bufferData.buffer.GetData(output);
+                bufferData.buffer.GetData(output, outputStartIndex, bufferStartIndex, count);
             }
         }
 
@@ -1756,21 +1730,16 @@ namespace GPUComputeModule
         /// <typeparam name="T">The struct type of the buffer</typeparam>
         /// <param name="name">The name of the buffer</param>
         /// <param name="output">The target to output the buffer data to</param>
-        public void GetBufferData<T>(string name, ref List<T> output) where T : struct
+        /// <param name="outputStartIndex">Optional. The start index of the output array</param>
+        /// <param name="bufferStartIndex">Optional. The start index of the buffer</param>
+        /// <param name="count">Optional. The number of elements to copy from the buffer. If count is <= 0, then all elements will be copied</param>
+        public void GetBufferData<T>(string name, ref List<T> output, int outputStartIndex = 0, int bufferStartIndex = 0, int count = -1) where T : struct
         {
             BufferInfo bufferData = GetBuffer(name);
-            if (string.IsNullOrEmpty(bufferData.name))
-            {
-                Debug.LogError("Unable to get buffer data " + name + ", buffer not found");
-            }
-            else if (bufferData.dataType != typeof(T))
-            {
-                Debug.LogError("Unable to get buffer data " + name + ", supplied type is incorrect. BufferType=" + bufferData.dataType + ", SuppliedType=" + typeof(T));
-            }
-            else
+            if (BuffersMatch<T>(name, bufferData, output.Count, outputStartIndex, bufferStartIndex, ref count))
             {
                 T[] temp = new T[output.Count];
-                bufferData.buffer.GetData(temp);
+                bufferData.buffer.GetData(temp, outputStartIndex, bufferStartIndex, count);
                 for (int i = 0; i < temp.Length; i++)
                 {
                     output[i] = temp[i];
@@ -1784,21 +1753,16 @@ namespace GPUComputeModule
         /// <typeparam name="T">The struct type of the buffer</typeparam>
         /// <param name="name">The name of the buffer</param>
         /// <param name="output">The target to output the buffer data to</param>
-        public void GetBufferData<T>(string name, ref NativeArray<T> output) where T : struct
+        /// <param name="outputStartIndex">Optional. The start index of the output array</param>
+        /// <param name="bufferStartIndex">Optional. The start index of the buffer</param>
+        /// <param name="count">Optional. The number of elements to copy from the buffer. If count is <= 0, then all elements will be copied</param>
+        public void GetBufferData<T>(string name, ref NativeArray<T> output, int outputStartIndex = 0, int bufferStartIndex = 0, int count = -1) where T : struct
         {
             BufferInfo bufferData = GetBuffer(name);
-            if (string.IsNullOrEmpty(bufferData.name))
-            {
-                Debug.LogError("Unable to get buffer data " + name + ", buffer not found");
-            }
-            else if (bufferData.dataType != typeof(T))
-            {
-                Debug.LogError("Unable to get buffer data " + name + ", supplied type is incorrect. BufferType=" + bufferData.dataType + ", SuppliedType=" + typeof(T));
-            }
-            else
+            if (BuffersMatch<T>(name, bufferData, output.Length, outputStartIndex, bufferStartIndex, ref count))
             {
                 T[] temp = new T[output.Length];
-                bufferData.buffer.GetData(temp);
+                bufferData.buffer.GetData(temp, outputStartIndex, bufferStartIndex, count);
                 for (int i = 0; i < temp.Length; i++)
                 {
                     output[i] = temp[i];
@@ -1812,20 +1776,15 @@ namespace GPUComputeModule
         /// <typeparam name="T">The struct type of the buffer</typeparam>
         /// <param name="name">The name of the global buffer</param>
         /// <param name="output">The target to output the buffer data to</param>
-        public static void GetGlobalBufferData<T>(string name, ref T[] output) where T : struct
+        /// <param name="outputStartIndex">Optional. The start index of the output array</param>
+        /// <param name="bufferStartIndex">Optional. The start index of the buffer</param>
+        /// <param name="count">Optional. The number of elements to copy from the buffer. If count is <= 0, then all elements will be copied</param>
+        public static void GetGlobalBufferData<T>(string name, ref T[] output, int outputStartIndex = 0, int bufferStartIndex = 0, int count = -1) where T : struct
         {
             BufferInfo bufferData = GetGlobalBuffer(name);
-            if (string.IsNullOrEmpty(bufferData.name))
+            if (BuffersMatch<T>(name, bufferData, output.Length, outputStartIndex, bufferStartIndex, ref count))
             {
-                Debug.LogError("Unable to get global buffer data " + name + ", global buffer not found");
-            }
-            else if (bufferData.dataType != typeof(T))
-            {
-                Debug.LogError("Unable to get global buffer data " + name + ", supplied type is incorrect. BufferType=" + bufferData.dataType + ", SuppliedType=" + typeof(T));
-            }
-            else
-            {
-                bufferData.buffer.GetData(output);
+                bufferData.buffer.GetData(output, outputStartIndex, bufferStartIndex, count);
             }
         }
 
@@ -1835,21 +1794,16 @@ namespace GPUComputeModule
         /// <typeparam name="T">The struct type of the buffer</typeparam>
         /// <param name="name">The name of the global buffer</param>
         /// <param name="output">The target to output the buffer data to</param>
-        public static void GetGlobalBufferData<T>(string name, ref List<T> output) where T : struct
+        /// <param name="outputStartIndex">Optional. The start index of the output array</param>
+        /// <param name="bufferStartIndex">Optional. The start index of the buffer</param>
+        /// <param name="count">Optional. The number of elements to copy from the buffer. If count is <= 0, then all elements will be copied</param>
+        public static void GetGlobalBufferData<T>(string name, ref List<T> output, int outputStartIndex = 0, int bufferStartIndex = 0, int count = -1) where T : struct
         {
             BufferInfo bufferData = GetGlobalBuffer(name);
-            if (string.IsNullOrEmpty(bufferData.name))
-            {
-                Debug.LogError("Unable to get global buffer data " + name + ", global buffer not found");
-            }
-            else if (bufferData.dataType != typeof(T))
-            {
-                Debug.LogError("Unable to get global buffer data " + name + ", supplied type is incorrect. BufferType=" + bufferData.dataType + ", SuppliedType=" + typeof(T));
-            }
-            else
+            if (BuffersMatch<T>(name, bufferData, output.Count, outputStartIndex, bufferStartIndex, ref count))
             {
                 T[] temp = new T[output.Count];
-                bufferData.buffer.GetData(temp);
+                bufferData.buffer.GetData(temp, outputStartIndex, bufferStartIndex, count);
                 for (int i = 0; i < temp.Length; i++)
                 {
                     output[i] = temp[i];
@@ -1863,21 +1817,16 @@ namespace GPUComputeModule
         /// <typeparam name="T">The struct type of the buffer</typeparam>
         /// <param name="name">The name of the global buffer</param>
         /// <param name="output">The target to output the buffer data to</param>
-        public static void GetGlobalBufferData<T>(string name, ref NativeArray<T> output) where T : struct
+        /// <param name="outputStartIndex">Optional. The start index of the output array</param>
+        /// <param name="bufferStartIndex">Optional. The start index of the buffer</param>
+        /// <param name="count">Optional. The number of elements to copy from the buffer. If count is <= 0, then all elements will be copied</param>
+        public static void GetGlobalBufferData<T>(string name, ref NativeArray<T> output, int outputStartIndex = 0, int bufferStartIndex = 0, int count = -1) where T : struct
         {
             BufferInfo bufferData = GetGlobalBuffer(name);
-            if (string.IsNullOrEmpty(bufferData.name))
-            {
-                Debug.LogError("Unable to get global buffer data " + name + ", global buffer not found");
-            }
-            else if (bufferData.dataType != typeof(T))
-            {
-                Debug.LogError("Unable to get global buffer data " + name + ", supplied type is incorrect. BufferType=" + bufferData.dataType + ", SuppliedType=" + typeof(T));
-            }
-            else
+            if (BuffersMatch<T>(name, bufferData, output.Length, outputStartIndex, bufferStartIndex, ref count))
             {
                 T[] temp = new T[output.Length];
-                bufferData.buffer.GetData(temp);
+                bufferData.buffer.GetData(temp, outputStartIndex, bufferStartIndex, count);
                 for (int i = 0; i < temp.Length; i++)
                 {
                     output[i] = temp[i];
@@ -1964,82 +1913,116 @@ namespace GPUComputeModule
 
         #region Async Data Retrieval
         /// <summary>
-        /// Asynchronously gets all values of a buffer in the compute shader using AsyncGPUReadbackRequest. This is more efficient than GetBufferData, but requires a callback to retrieve the data once the request is complete.
-        /// </summary>
-        /// <param name="bufferName">The name of the buffer in the compute shader</param>
-        /// <returns>A coroutine that can be yielded to wait for the async readback to complete</returns>
-        public IEnumerator GetBufferDataAsync(string bufferName)
-        {
-            BufferInfo bufferInfo = GetBuffer(bufferName);
-            if (bufferInfo.buffer == null)
-            {
-                Debug.LogError("Error getting buffer data, unable to find buffer '" + bufferName + "'");
-            }
-            else
-            {
-                yield return GetBufferDataAsync(bufferName, bufferInfo.GetCount(), 0);
-            }
-        }
-
-        /// <summary>
         /// Asynchronously gets the wanted values of a buffer in the compute shader using AsyncGPUReadbackRequest. This is more efficient than GetBufferData, but requires a callback to retrieve the data once the request is complete.
         /// </summary>
         /// <param name="bufferName">The name of the buffer in the compute shader</param>
-        /// <param name="length">The number of elements in the buffer to retrieve</param>
+        /// <param name="length">Optional. The number of elements in the buffer to retrieve. If not specified, the entire buffer will be retrieved</param>
         /// <param name="startIndex">Optional. The index to begin retrieving data from</param>
-        /// <returns>A coroutine that can be yielded to wait for the async readback to complete</returns>
-        public IEnumerator GetBufferDataAsync(string bufferName, int length, int startIndex = 0)
+        /// <returns>A coroutine that can be started to asynchronously read back the data from a buffer</returns>
+        public IEnumerator GetBufferDataAsync(string bufferName, int length = -1, int startIndex = 0)
         {
             BufferInfo bufferInfo = GetBuffer(bufferName);
             if (bufferInfo.buffer == null)
             {
                 Debug.LogError("Error getting buffer data, unable to find buffer '" + bufferName + "'");
             }
+            else if (startIndex < 0 || startIndex >= bufferInfo.GetCount())
+            {
+                Debug.LogError($"Error getting buffer data, invalid startIndex '{startIndex}' must be between 0 and  '{bufferInfo.GetCount() - 1}'");
+            }
             else
             {
-                int structSize = MemorySizes.GetStructSizeInBytes(bufferInfo.dataType);
-                AsyncGPUReadbackRequest request = AsyncGPUReadback.Request(bufferInfo.buffer, length * structSize, startIndex * structSize);
-                yield return new WaitWhile(() => !request.done);
-
-                if (request.hasError)
+                if (length <= 0)
                 {
-                    Debug.LogError("Error retrieving buffer data, AsyncGPUReadbackRequest error");
+                    length = bufferInfo.GetCount();
+                }
+
+                if (startIndex + length > bufferInfo.GetCount())
+                {
+                    Debug.LogError($"Error getting buffer data, length '{length}' exceeds the bounds of the buffer. Length must be between 0 and '{bufferInfo.GetCount() - startIndex}'");
                 }
                 else
                 {
-                    if (OnReadbackComplete == null || OnReadbackComplete.Target == null || OnReadbackComplete.Method == null)
+                    int structSize = MemorySizes.GetStructSizeInBytes(bufferInfo.dataType);
+                    AsyncGPUReadbackRequest request = AsyncGPUReadback.Request(bufferInfo.buffer, length * structSize, startIndex * structSize);
+                    yield return new WaitWhile(() => !request.done);
+
+                    if (request.hasError)
                     {
-                        OnReadbackComplete = null;
+                        Debug.LogError("Error retrieving buffer data, AsyncGPUReadbackRequest error");
                     }
                     else
                     {
-                        OnReadbackComplete(request, bufferName);
+                        if (OnReadbackComplete == null || OnReadbackComplete.Target == null || OnReadbackComplete.Method == null)
+                        {
+                            OnReadbackComplete = null;
+                        }
+                        else
+                        {
+                            OnReadbackComplete(request, bufferName);
+                        }
                     }
                 }
             }
         }
 
         /// <summary>
-        /// Asynchronously gets all values of a render texture in the compute shader using AsyncGPUReadbackRequest. This is more efficient than GetBufferData, but requires a callback to retrieve the data once the request is complete.
+        /// Asynchronously gets the wanted values of a global buffer in the compute shader using AsyncGPUReadbackRequest. This is more efficient than GetGlobalBufferData, but requires a callback to retrieve the data once the request is complete.
         /// </summary>
-        /// <param name="textureName">The name of the render texture in the compute shader</param>
-        /// <param name="mipIndex">Optional. The mip level to retrieve pixels</param>
-        /// <returns>A coroutine that can be yielded to wait for the async readback to complete</returns>
-        public IEnumerator GetRenderTextureDataAsync(string textureName, int mipIndex = 0)
+        /// <param name="bufferName">The name of the global buffer in the compute shader</param>
+        /// <param name="length">Optional. The number of elements in the buffer to retrieve. If not specified, the entire buffer will be retrieved</param>
+        /// <param name="startIndex">Optional. The index to begin retrieving data from</param>
+        /// <param name="parameters">Optional. Additional parameters that can be passed through for your own use</param>
+        /// <returns>A coroutine that can be started to asynchronously read back the data from a buffer</returns>
+        public static IEnumerator GetGlobalBufferDataAsync(string bufferName, int length = -1, int startIndex = 0, params object[] parameters)
         {
-            RenderTexture renderTexture = GetRenderTexture(textureName);
-            if (renderTexture == null)
+            BufferInfo bufferInfo = GetGlobalBuffer(bufferName);
+            if (bufferInfo.buffer == null)
             {
-                Debug.LogError($"Error getting texture data, unable to find render texture '{textureName}'");
+                Debug.LogError("Error getting global buffer data, unable to find global buffer '" + bufferName + "'");
+            }
+            else if (startIndex < 0 || startIndex >= bufferInfo.GetCount())
+            {
+                Debug.LogError($"Error getting global buffer data, invalid startIndex '{startIndex}' must be between 0 and  '{bufferInfo.GetCount() - 1}'");
             }
             else
             {
-                yield return GetRenderTextureDataAsync(textureName, renderTexture.width, renderTexture.height, renderTexture.volumeDepth, mipIndex, 0, 0, 0);
+                if (length <= 0)
+                {
+                    length = bufferInfo.GetCount();
+                }
+
+                if (startIndex + length > bufferInfo.GetCount())
+                {
+                    Debug.LogError($"Error getting global buffer data, length '{length}' exceeds the bounds of the global buffer. Length must be between 0 and '{bufferInfo.GetCount() - startIndex}'");
+                }
+                else
+                {
+                    int structSize = MemorySizes.GetStructSizeInBytes(bufferInfo.dataType);
+                    AsyncGPUReadbackRequest request = AsyncGPUReadback.Request(bufferInfo.buffer, length * structSize, startIndex * structSize);
+                    yield return new WaitWhile(() => !request.done);
+
+                    if (request.hasError)
+                    {
+                        Debug.LogError("Error retrieving global buffer data, AsyncGPUReadbackRequest error");
+                    }
+                    else
+                    {
+                        if (OnGlobalReadbackComplete == null || OnGlobalReadbackComplete.Target == null || OnGlobalReadbackComplete.Method == null)
+                        {
+                            OnGlobalReadbackComplete = null;
+                        }
+                        else
+                        {
+                            OnGlobalReadbackComplete(request, bufferName, parameters);
+                        }
+                    }
+                }
             }
         }
 
         /// <summary>
-        /// Asynchronously gets the wanted values of a render texture in the compute shader using AsyncGPUReadbackRequest. This is more efficient than GetBufferData, but requires a callback to retrieve the data once the request is complete.
+        /// Asynchronously gets the wanted values of a render texture in the compute shader using AsyncGPUReadbackRequest. This is more efficient than GetRenderTextureData, but requires a callback to retrieve the data once the request is complete.
         /// </summary>
         /// <param name="textureName">The name of the render texture in the compute shader</param>
         /// <param name="width">The x length to retrieve pixels</param>
@@ -2049,97 +2032,134 @@ namespace GPUComputeModule
         /// <param name="x">Optional. The starting x coordinate to retrieve pixels</param>
         /// <param name="y">Optional. The starting y coordinate to retrieve pixels</param>
         /// <param name="z">Optional. The starting z coordinate to retrieve pixels</param>
-        /// <returns>A coroutine that can be yielded to wait for the async readback to complete</returns>
-        public IEnumerator GetRenderTextureDataAsync(string textureName, int width, int height, int depth, int mipIndex = 0, int x = 0, int y = 0, int z = 0)
+        /// <returns>A coroutine that can be started to asynchronously read back the pixels from a global render texture</returns>
+        public IEnumerator GetRenderTextureDataAsync(string textureName, int width = -1, int height = -1, int depth = -1, int mipIndex = 0, int x = 0, int y = 0, int z = 0)
         {
             RenderTexture renderTexture = GetRenderTexture(textureName);
             if (renderTexture == null)
             {
                 Debug.LogError($"Error getting texture data, unable to find render texture '{textureName}'");
             }
-            else if (x + width > renderTexture.width || y + height > renderTexture.height || z + depth > renderTexture.volumeDepth)
-            {
-                Debug.LogError("Error getting texture data, coordinates out of bounds for supplied width, height and/or depth");
-            }
-            else if (x >= renderTexture.width || y >= renderTexture.height || z >= renderTexture.volumeDepth)
-            {
-                Debug.LogError($"Error getting texture data, coordinates out of bounds for render texture '{textureName}'");
-            }
             else
             {
-                AsyncGPUReadbackRequest request = AsyncGPUReadback.Request(renderTexture, mipIndex, x, width, y, height, z, depth);
-                yield return new WaitWhile(() => !request.done);
-
-                if (request.hasError)
+                if (width <= 0)
                 {
-                    Debug.LogError("Error retrieving texture data, AsyncGPUReadbackRequest error");
+                    width = renderTexture.width;
+                }
+                if (height <= 0)
+                {
+                    height = renderTexture.height;
+                }
+                if (depth <= 0)
+                {
+                    depth = renderTexture.volumeDepth;
+                }
+
+                if (x + width > renderTexture.width || y + height > renderTexture.height || z + depth > renderTexture.volumeDepth)
+                {
+                    Debug.LogError($"Error getting texture data, coordinates out of bounds for render texture '{textureName}'. "
+                        + $"Area: ({width}, {height}, {depth}). Coordinates: ({x}, {y}, {z}). Texture dimensions: ({renderTexture.width}, {renderTexture.height}, {renderTexture.volumeDepth})");
+                }
+                else if (x >= renderTexture.width || y >= renderTexture.height || z >= renderTexture.volumeDepth)
+                {
+                    Debug.LogError($"Error getting texture data, coordinates out of bounds for render texture '{textureName}'. "
+                        + $"Area: ({width}, {height}, {depth}). Coordinates: ({x}, {y}, {z}). Texture dimensions: ({renderTexture.width}, {renderTexture.height}, {renderTexture.volumeDepth})");
                 }
                 else
                 {
-                    if (OnReadbackComplete == null || OnReadbackComplete.Target == null || OnReadbackComplete.Method == null)
+                    AsyncGPUReadbackRequest request = AsyncGPUReadback.Request(renderTexture, mipIndex, x, width, y, height, z, depth);
+                    yield return new WaitWhile(() => !request.done);
+
+                    if (request.hasError)
                     {
-                        OnReadbackComplete = null;
+                        Debug.LogError("Error retrieving texture data, AsyncGPUReadbackRequest error");
                     }
                     else
                     {
-                        OnReadbackComplete(request, textureName);
+                        if (OnReadbackComplete == null || OnReadbackComplete.Target == null || OnReadbackComplete.Method == null)
+                        {
+                            OnReadbackComplete = null;
+                        }
+                        else
+                        {
+                            OnReadbackComplete(request, textureName);
+                        }
                     }
                 }
             }
         }
 
         /// <summary>
-        /// Asynchronously gets the wanted values of a global render texture in the compute shader using AsyncGPUReadbackRequest. This is more efficient than GetBufferData, but requires a callback to retrieve the data once the request is complete.
+        /// Asynchronously gets the wanted values of a global render texture in the compute shader using AsyncGPUReadbackRequest. This is more efficient than GetGlobalRenderTextureData, but requires a callback to retrieve the data once the request is complete.
         /// </summary>
         /// <param name="textureName">The name of the global render texture in the compute shader</param>
-        /// <param name="width">The x length to retrieve pixels</param>
-        /// <param name="height">The y length to retrieve pixels</param>
-        /// <param name="depth">The z length to retrieve pixels</param>
+        /// <param name="width">Optional. The x length to retrieve pixels. If not specified, all pixels in the x dimension will be retrieved</param>
+        /// <param name="height">Optional. The y length to retrieve pixels. If not specified, all pixels in the y dimension will be retrieved</param>
+        /// <param name="depth">Optional. The z length to retrieve pixels. If not specified, all pixels in the z dimension will be retrieved</param>
         /// <param name="mipIndex">Optional. The mip level to retrieve pixels</param>
-        /// <param name="x">Optional. The starting x coordinate to retrieve pixels</param>
-        /// <param name="y">Optional. The starting y coordinate to retrieve pixels</param>
-        /// <param name="z">Optional. The starting z coordinate to retrieve pixels</param>
-        /// <returns>A coroutine that can be yielded to wait for the async readback to complete</returns>
-        public static IEnumerator GetGlobalRenderTextureDataAsync(string textureName, int width, int height, int depth, int mipIndex = 0, int x = 0, int y = 0, int z = 0)
+        /// <param name="x">Optional. The starting x coordinate to retrieve pixels. If not specified, the starting x coordinate will be 0</param>
+        /// <param name="y">Optional. The starting y coordinate to retrieve pixels. If not specified, the starting y coordinate will be 0</param>
+        /// <param name="z">Optional. The starting z coordinate to retrieve pixels. If not specified, the starting z coordinate will be 0</param>
+        /// <param name="parameters">Optional. Additional parameters that can be passed through for your own use</param>
+        /// <returns>A coroutine that can be started to asynchronously read back the pixels from a global render texture</returns>
+        public static IEnumerator GetGlobalRenderTextureDataAsync(string textureName, int width = -1, int height = -1, int depth = -1, int mipIndex = 0, int x = 0, int y = 0, int z = 0, params object[] parameters)
         {
             RenderTexture renderTexture = GetGlobalRenderTexture(textureName);
             if (renderTexture == null)
             {
                 Debug.LogError($"Error getting global texture data, unable to find global render texture '{textureName}'");
             }
-            else if (x + width > renderTexture.width || y + height > renderTexture.height || z + depth > renderTexture.volumeDepth)
-            {
-                Debug.LogError("Error getting global texture data, coordinates out of bounds for supplied width, height and/or depth");
-            }
-            else if (x >= renderTexture.width || y >= renderTexture.height || z >= renderTexture.volumeDepth)
-            {
-                Debug.LogError($"Error getting global texture data, coordinates out of bounds for global render texture '{textureName}'");
-            }
             else
             {
-                AsyncGPUReadbackRequest request = AsyncGPUReadback.Request(renderTexture, mipIndex, x, width, y, height, z, depth);
-                yield return new WaitWhile(() => !request.done);
-
-                if (request.hasError)
+                if (width <= 0)
                 {
-                    Debug.LogError("Error retrieving texture data, AsyncGPUReadbackRequest error");
+                    width = renderTexture.width;
+                }
+                if (height <= 0)
+                {
+                    height = renderTexture.height;
+                }
+                if (depth <= 0)
+                {
+                    depth = renderTexture.volumeDepth;
+                }
+
+                if (x + width > renderTexture.width || y + height > renderTexture.height || z + depth > renderTexture.volumeDepth)
+                {
+                    Debug.LogError($"Error getting global texture data, coordinates out of bounds for global render texture '{textureName}'. "
+                        + $"Area: ({width}, {height}, {depth}). Coordinates: ({x}, {y}, {z}). Global texture dimensions: ({renderTexture.width}, {renderTexture.height}, {renderTexture.volumeDepth})");
+                }
+                else if (x >= renderTexture.width || y >= renderTexture.height || z >= renderTexture.volumeDepth)
+                {
+                    Debug.LogError($"Error getting global texture data, coordinates out of bounds for global render texture '{textureName}'. "
+                        + $"Area: ({width}, {height}, {depth}). Coordinates: ({x}, {y}, {z}). Global texture dimensions: ({renderTexture.width}, {renderTexture.height}, {renderTexture.volumeDepth})");
                 }
                 else
                 {
-                    if (OnGlobalReadbackComplete == null || OnGlobalReadbackComplete.Target == null || OnGlobalReadbackComplete.Method == null)
+                    AsyncGPUReadbackRequest request = AsyncGPUReadback.Request(renderTexture, mipIndex, x, width, y, height, z, depth);
+                    yield return new WaitWhile(() => !request.done);
+
+                    if (request.hasError)
                     {
-                        OnGlobalReadbackComplete = null;
+                        Debug.LogError("Error retrieving texture data, AsyncGPUReadbackRequest error");
                     }
                     else
                     {
-                        OnGlobalReadbackComplete(request, textureName);
+                        if (OnGlobalReadbackComplete == null || OnGlobalReadbackComplete.Target == null || OnGlobalReadbackComplete.Method == null)
+                        {
+                            OnGlobalReadbackComplete = null;
+                        }
+                        else
+                        {
+                            OnGlobalReadbackComplete(request, textureName, parameters);
+                        }
                     }
                 }
             }
         }
 
         /// <summary>
-        /// Reads back the data from an AsyncGPUReadbackRequest into a native array.
+        /// Reads back the data from an AsyncGPUReadbackRequest into a NativeArray on the CPU.
         /// </summary>
         /// <typeparam name="T">The struct type of the data</typeparam>
         /// <param name="request">The AsyncGPUReadbackRequest to read back data from</param>
@@ -2151,11 +2171,11 @@ namespace GPUComputeModule
                 Debug.LogError("Unable to readback to native array, request and data dimensions do not match");
                 return;
             }
-            data = request.GetData<T>(0);
+            data = request.GetData<T>();
         }
 
         /// <summary>
-        /// Reads back the data from an AsyncGPUReadbackRequest into a array.
+        /// Reads back the data from an AsyncGPUReadbackRequest into a Array on the CPU.
         /// </summary>
         /// <typeparam name="T">The struct type of the data</typeparam>
         /// <param name="request">The AsyncGPUReadbackRequest to read back data from</param>
@@ -2167,13 +2187,11 @@ namespace GPUComputeModule
                 Debug.LogError("Unable to readback to native array, request and data dimensions do not match");
                 return;
             }
-            NativeArray<T> nativeData = request.GetData<T>(0);
-            data = nativeData.ToArray();
-            nativeData.Dispose();
+            data = request.GetData<T>().ToArray();
         }
 
         /// <summary>
-        /// Reads back the data from an AsyncGPUReadbackRequest into a list.
+        /// Reads back the data from an AsyncGPUReadbackRequest into a List on the CPU.
         /// </summary>
         /// <typeparam name="T">The struct type of the data</typeparam>
         /// <param name="request">The AsyncGPUReadbackRequest to read back data from</param>
@@ -2185,52 +2203,80 @@ namespace GPUComputeModule
                 Debug.LogError("Unable to readback to native array, request and data dimensions do not match");
                 return;
             }
-            NativeArray<T> nativeData = request.GetData<T>(0);
-            data = nativeData.ToList();
-            nativeData.Dispose();
+            data = request.GetData<T>().ToList();
         }
 
         /// <summary>
-        /// Reads back the data from an AsyncGPUReadbackRequest into a texture2D.
+        /// Reads back the data from an AsyncGPUReadbackRequest into a Texture2D on the CPU.
         /// </summary>
         /// <param name="request">The AsyncGPUReadbackRequest to read back data from</param>
         /// <param name="texture">The texture2D to read the data into</param>
-        public static void ReadbackRequestToTexture2D(ref AsyncGPUReadbackRequest request, ref Texture2D texture)
+        /// <param name="mipLevel">Optional. The mip level to retrieve pixels</param>
+        public static void ReadbackRequestToTexture2D(ref AsyncGPUReadbackRequest request, ref Texture2D texture, int mipLevel = 0)
         {
             if (request.width != texture.width || request.height != texture.height)
             {
                 Debug.LogError("Unable to readback to texture2D, request and texture dimensions do not match");
                 return;
             }
-            NativeArray<byte> data = request.GetData<byte>(0);
-            texture.SetPixelData(data, 0);
-            data.Dispose();
-            texture.Apply();
+
+            texture.SetPixelData(request.GetData<Color>(), mipLevel);
+            texture.Apply(false);
         }
 
         /// <summary>
-        /// Reads back the data from an AsyncGPUReadbackRequest into a texture3D.
+        /// Reads back the data from an AsyncGPUReadbackRequest into a Texture3D on the CPU.
         /// </summary>
         /// <param name="request">The AsyncGPUReadbackRequest to read back data from</param>
         /// <param name="texture">The texture3D to read the data into</param>
-        public static void ReadbackRequestToTexture3D(ref AsyncGPUReadbackRequest request, ref Texture3D texture)
+        /// <param name="mipLevel">Optional. The mip level to retrieve pixels</param>
+        public static void ReadbackRequestToTexture3D(ref AsyncGPUReadbackRequest request, ref Texture3D texture, int mipLevel = 0)
         {
             if (request.width != texture.width || request.height != texture.height || request.depth != texture.depth)
             {
-                Debug.LogError("Unable to readback to texture3D, request and texture dimensions do not match");
+                Debug.LogError($"Unable to readback to texture3D, request and texture dimensions do not match. "
+                    + $"Request dimensions: ({request.width}, {request.height}, {request.depth}). Texture dimensions: ({texture.width}, {texture.height}, {texture.depth})");
                 return;
             }
 
-            NativeList<byte> data = new NativeList<byte>(Allocator.Persistent);
+            Color[] data = new Color[request.width * request.height * request.layerCount];
+            NativeArray<Color> slice;
+            int offset = 0;
 
-            for (int i = 0; i < texture.depth; i++)
+            for (int i = 0; i < request.layerCount; i++)
             {
-                data.AddRange(request.GetData<byte>(i));
+                slice = request.GetData<Color>(i);
+                for (int x = 0; x < slice.Length; x++)
+                {
+                    data[offset + x] = slice[x];
+                }
+                offset += slice.Length;
             }
 
-            texture.SetPixelData(data.AsArray(), 0);
-            data.Dispose();
-            texture.Apply();
+            texture.SetPixelData(data, mipLevel);
+            texture.Apply(false);
+        }
+
+        /// <summary>
+        /// Reads back the data from an AsyncGPUReadbackRequest into a Texture2DArray on the CPU.
+        /// </summary>
+        /// <param name="request">The AsyncGPUReadbackRequest to read back data from</param>
+        /// <param name="texture">The texture3D to read the data into</param>
+        /// <param name="mipLevel">Optional. The mip level to retrieve pixels</param>
+        public static void ReadbackRequestToTexture2DArray(ref AsyncGPUReadbackRequest request, ref Texture2DArray texture, int mipLevel = 0)
+        {
+            if (request.width != texture.width || request.height != texture.height || request.depth != texture.depth)
+            {
+                Debug.LogError($"Unable to readback to Texture2DArray, request and texture dimensions do not match. "
+                    + $"Request dimensions: ({request.width}, {request.height}, {request.depth}). Texture dimensions: ({texture.width}, {texture.height}, {texture.depth})");
+                return;
+            }
+
+            for (int i = 0; i < request.layerCount; i++)
+            {
+                texture.SetPixelData(request.GetData<Color>(i), i, mipLevel);
+            }
+            texture.Apply(false);
         }
         #endregion
 
@@ -2252,7 +2298,7 @@ namespace GPUComputeModule
 
             BufferInfo bufferInfo = GetBuffer(name);
             int stride = bufferInfo.GetStride();
-            UpdateBufferMemoryUsage(ref localGPUMemoryUsage, stride, bufferInfo.GetCount(), Operation.SUBTRACT);
+            UpdateBufferMemoryUsage(ref localGPUMemoryUsage, stride, bufferInfo.GetCount(), MathOperation.SUBTRACT);
             bufferInfo.buffer.Dispose();
             bufferInfo.buffer = null;
             buffers.RemoveAt(index);
@@ -2263,7 +2309,7 @@ namespace GPUComputeModule
             {
                 computeShader.SetBuffer(kernelIndex, name, newBuffer);
             }
-            UpdateBufferMemoryUsage(ref localGPUMemoryUsage, stride, length, Operation.ADD);
+            UpdateBufferMemoryUsage(ref localGPUMemoryUsage, stride, length, MathOperation.ADD);
         }
 
         /// <summary>
@@ -2283,13 +2329,13 @@ namespace GPUComputeModule
 
             BufferInfo bufferInfo = GetGlobalBuffer(name);
             int stride = bufferInfo.GetStride();
-            UpdateBufferMemoryUsage(ref globalGPUMemoryUsage, stride, bufferInfo.GetCount(), Operation.SUBTRACT);
+            UpdateBufferMemoryUsage(ref globalGPUMemoryUsage, stride, bufferInfo.GetCount(), MathOperation.SUBTRACT);
             bufferInfo.buffer.Dispose();
             globalBuffers.RemoveAt(index);
 
             ComputeBuffer newBuffer = new ComputeBuffer(length, stride, bufferInfo.computeBufferType, bufferInfo.computeBufferMode);
             globalBuffers.Add(new BufferInfo(name, newBuffer, bufferInfo.dataType, bufferInfo.computeBufferType, bufferInfo.computeBufferMode, bufferInfo.kernelIndices));
-            UpdateBufferMemoryUsage(ref globalGPUMemoryUsage, stride, length, Operation.ADD);
+            UpdateBufferMemoryUsage(ref globalGPUMemoryUsage, stride, length, MathOperation.ADD);
         }
         #endregion
 
@@ -2369,13 +2415,122 @@ namespace GPUComputeModule
             }
             return index;
         }
+
+        private static bool TexturesMatch(RenderTexture renderTexture, Texture texture, int textureDepth, TextureDimension textureDimension, ref int width, ref int height, ref int depth, int x, int y, int z)
+        {
+            bool isValid = true;
+            if (renderTexture == null)
+            {
+                Debug.LogError("Unable to get global render texture data, global render texture is null");
+                isValid = false;
+            }
+            else if (texture == null)
+            {
+                Debug.LogError("Unable to get global render texture data, supplied texture is null");
+                isValid = false;
+            }
+            else if (!renderTexture.isReadable)
+            {
+                Debug.LogError($"Unable to get global render texture data, global render texture '{renderTexture.name}' is not readable");
+                isValid = false;
+            }
+            else if (!texture.isReadable)
+            {
+                Debug.LogError($"Unable to get global render texture data, supplied texture '{texture.name}' is not readable");
+                isValid = false;
+            }
+            else if (texture.dimension != textureDimension)
+            {
+                Debug.LogError($"Unable to get global render texture data, supplied texture '{texture.name}' has a dimension of {texture.dimension}, expected dimension of {textureDimension}");
+                isValid = false;
+            }
+            else if (renderTexture.dimension != textureDimension)
+            {
+                Debug.LogError($"Unable to get global render texture data, global render texture '{renderTexture.name}' has a dimension of {renderTexture.dimension}, expected dimension of {textureDimension}");
+                isValid = false;
+            }
+            else
+            {
+                if (width <= 0)
+                {
+                    width = texture.width;
+                }
+                if (height <= 0)
+                {
+                    height = texture.height;
+                }
+                if (depth <= 0)
+                {
+                    depth = textureDepth;
+                }
+
+                if (width + x > renderTexture.width || height + y > renderTexture.height || depth + z > renderTexture.depth)
+                {
+                    Debug.LogError($"Unable to get global render texture data, global render texture '{renderTexture.name}' doesn't have enough space to hold the global render texture data");
+                    isValid = false;
+                }
+                else if (width + x > texture.width || height + y > texture.height || depth + z > textureDepth)
+                {
+                    Debug.LogError($"Unable to get global render texture data, the supplied texture '{texture.name}' doesn't have enough space to hold the global render texture data");
+                    isValid = false;
+                }
+            }
+            return isValid;
+        }
+
+        private static bool BuffersMatch<T>(string name, BufferInfo bufferData, int outputLength, int outputStartIndex, int bufferStartIndex, ref int count)
+        {
+            bool isValid = true;
+            if (string.IsNullOrEmpty(bufferData.name) || bufferData.buffer == null)
+            {
+                Debug.LogError($"Unable to get buffer data '{name}', buffer not found");
+                isValid = false;
+            }
+            else if (bufferData.dataType != typeof(T))
+            {
+                Debug.LogError($"Unable to get buffer data '{name}', supplied type is incorrect. Buffer type is '{bufferData.dataType}', Supplied type is '{typeof(T)}'");
+                isValid = false;
+            }
+            else if (bufferData.GetCount() <= 0)
+            {
+                Debug.LogError($"Unable to get buffer data '{name}', buffer data count is zero");
+                isValid = false;
+            }
+            else if (outputLength <= 0)
+            {
+                Debug.LogError($"Unable to get buffer data '{name}', supplied array data count is zero");
+                isValid = false;
+            }
+            else if (bufferData.GetCount() != outputLength)
+            {
+                Debug.LogError($"Unable to get buffer data '{name}', supplied array length is incorrect. Expected length '{bufferData.GetCount()}', Supplied length '{outputLength}'");
+                isValid = false;
+            }
+            else if (outputStartIndex < 0 || outputStartIndex >= outputLength)
+            {
+                Debug.LogError($"Unable to get buffer data '{name}', supplied start index is out of range. Expected range '0 - {outputLength - 1}', Supplied start index '{outputStartIndex}'");
+                isValid = false;
+            }
+            else if (bufferStartIndex < 0 || bufferStartIndex >= bufferData.GetCount())
+            {
+                Debug.LogError($"Unable to get buffer data '{name}', supplied start index is out of range. Expected range '0 - {bufferData.GetCount() - 1}', Supplied start index '{bufferStartIndex}'");
+                isValid = false;
+            }
+
+            if (count <= 0)
+            {
+                count = outputLength;
+            }
+
+            return isValid;
+        }
         #endregion
 
         #region Memory Tracking
-        private static void UpdateStructMemoryUsage<T>(ref long totalMemoryUsage, Operation operation) where T : struct
+        private static void UpdateStructMemoryUsage<T>(ref long totalMemoryUsage, MathOperation operation) where T : struct
         {
             long value = MemorySizes.GetStructSizeInBytes<T>();
-            if (operation == Operation.ADD)
+            if (operation == MathOperation.ADD)
             {
                 totalMemoryUsage += value;
             }
@@ -2385,10 +2540,10 @@ namespace GPUComputeModule
             }
         }
 
-        private static void UpdateBufferMemoryUsage(ref long totalMemoryUsage, int stride, long length, Operation operation)
+        private static void UpdateBufferMemoryUsage(ref long totalMemoryUsage, int stride, long length, MathOperation operation)
         {
             long value = stride * length;
-            if (operation == Operation.ADD)
+            if (operation == MathOperation.ADD)
             {
                 totalMemoryUsage += value;
             }
@@ -2398,57 +2553,57 @@ namespace GPUComputeModule
             }
         }
 
-        private static void UpdateTextureMemoryUsage(ref Texture2DArray texture, ref long memoryUsage, Operation operation)
+        private static void UpdateTextureMemoryUsage(ref Texture2DArray texture, ref long memoryUsage, MathOperation operation)
         {
             long value = texture.width * texture.height * texture.depth * MemorySizes.GetBitsPerPixel(texture.format) / 8;
 
-            if (operation == Operation.ADD)
+            if (operation == MathOperation.ADD)
             {
                 memoryUsage += value;
             }
-            else if (operation == Operation.SUBTRACT)
+            else if (operation == MathOperation.SUBTRACT)
             {
                 memoryUsage -= value;
             }
         }
 
-        private static void UpdateTextureMemoryUsage(ref Texture2D texture, ref long memoryUsage, Operation operation)
+        private static void UpdateTextureMemoryUsage(ref Texture2D texture, ref long memoryUsage, MathOperation operation)
         {
             long value = texture.width * texture.height * MemorySizes.GetBitsPerPixel(texture.format) / 8;
 
-            if (operation == Operation.ADD)
+            if (operation == MathOperation.ADD)
             {
                 memoryUsage += value;
             }
-            else if (operation == Operation.SUBTRACT)
+            else if (operation == MathOperation.SUBTRACT)
             {
                 memoryUsage -= value;
             }
         }
 
-        private static void UpdateTextureMemoryUsage(ref Texture3D texture, ref long memoryUsage, Operation operation)
+        private static void UpdateTextureMemoryUsage(ref Texture3D texture, ref long memoryUsage, MathOperation operation)
         {
             long value = texture.width * texture.height * texture.depth * MemorySizes.GetBitsPerPixel(texture.format) / 8;
 
-            if (operation == Operation.ADD)
+            if (operation == MathOperation.ADD)
             {
                 memoryUsage += value;
             }
-            else if (operation == Operation.SUBTRACT)
+            else if (operation == MathOperation.SUBTRACT)
             {
                 memoryUsage -= value;
             }
         }
 
-        private static void UpdateTextureMemoryUsage(ref RenderTexture texture, ref long memoryUsage, Operation operation)
+        private static void UpdateTextureMemoryUsage(ref RenderTexture texture, ref long memoryUsage, MathOperation operation)
         {
             long value = texture.width * texture.height * texture.volumeDepth * MemorySizes.GetBitsPerPixel(texture.format, texture.depth) / 8;
 
-            if (operation == Operation.ADD)
+            if (operation == MathOperation.ADD)
             {
                 memoryUsage += value;
             }
-            else if (operation == Operation.SUBTRACT)
+            else if (operation == MathOperation.SUBTRACT)
             {
                 memoryUsage -= value;
             }
@@ -2782,7 +2937,7 @@ namespace GPUComputeModule
             if (index != -1)
             {
                 RenderTexture renderTexture = renderTextures[index];
-                UpdateTextureMemoryUsage(ref renderTexture, ref localGPUMemoryUsage, Operation.SUBTRACT);
+                UpdateTextureMemoryUsage(ref renderTexture, ref localGPUMemoryUsage, MathOperation.SUBTRACT);
                 renderTexture.Release();
                 renderTextures.RemoveAt(index);
             }
@@ -2798,7 +2953,7 @@ namespace GPUComputeModule
             if (index != -1)
             {
                 RenderTexture renderTexture = globalRenderTextures[index];
-                UpdateTextureMemoryUsage(ref renderTexture, ref globalGPUMemoryUsage, Operation.SUBTRACT);
+                UpdateTextureMemoryUsage(ref renderTexture, ref globalGPUMemoryUsage, MathOperation.SUBTRACT);
                 renderTexture.Release();
                 globalRenderTextures.RemoveAt(index);
             }
@@ -2813,7 +2968,7 @@ namespace GPUComputeModule
             int index = IndexOfBufferInList(name, ref buffers);
             if (index != -1)
             {
-                UpdateBufferMemoryUsage(ref localGPUMemoryUsage, buffers[index].GetStride(), buffers[index].GetCount(), Operation.SUBTRACT);
+                UpdateBufferMemoryUsage(ref localGPUMemoryUsage, buffers[index].GetStride(), buffers[index].GetCount(), MathOperation.SUBTRACT);
                 buffers[index].buffer.Dispose();
                 buffers.RemoveAt(index);
             }
@@ -2828,7 +2983,7 @@ namespace GPUComputeModule
             int index = IndexOfBufferInList(name, ref globalBuffers);
             if (index != -1)
             {
-                UpdateBufferMemoryUsage(ref globalGPUMemoryUsage, globalBuffers[index].GetStride(), globalBuffers[index].GetCount(), Operation.SUBTRACT);
+                UpdateBufferMemoryUsage(ref globalGPUMemoryUsage, globalBuffers[index].GetStride(), globalBuffers[index].GetCount(), MathOperation.SUBTRACT);
                 globalBuffers[index].buffer.Dispose();
                 globalBuffers.RemoveAt(index);
             }
