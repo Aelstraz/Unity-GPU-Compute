@@ -382,7 +382,7 @@ gpuCompute.OnReadbackComplete += OnBufferReadbackComplete;
 
 private void OnBufferReadbackComplete(AsyncGPUReadbackRequest request, string bufferName)
 {
-    Vector3[] data = new Vector3[request.width / 12]; // 12 bytes per Vector3
+    Vector3[] data = new Vector3[100]; 
     GPUCompute.ReadbackRequestToArray(ref request, ref data);
     // Process data...
 }
