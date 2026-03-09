@@ -1,5 +1,5 @@
 # GPU Compute (Unity)
-GPU Compute provides the ultimate & easiest way to setup & execute GPU compute shaders in Unity. Reduces complexity and boilerplate code while providing powerful features for GPU memory management, performance tracking, and shader execution control.
+GPU Compute provides the ultimate & easiest way to setup, manage & execute GPU compute shaders in Unity. Reduces complexity and boilerplate code while providing powerful features for standard/async execution, global & local buffer/render texture creation, management, reading (standard/async), tracking & disposal, global and local variable management, GPU memory tracking, performance tracking, shader execution control & much more! 
 
 ## Features
 
